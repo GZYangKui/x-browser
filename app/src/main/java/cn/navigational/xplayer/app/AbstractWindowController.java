@@ -1,6 +1,7 @@
 package cn.navigational.xplayer.app;
 
 import cn.navigational.xplayer.app.assets.XPlayerResource;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,16 +14,12 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
     private final Stage stage;
     private final Scene scene;
 
-    public AbstractWindowController(URL fxmlURL) {
-        super(fxmlURL);
+    public AbstractWindowController(String fxml) {
+        super(fxml);
         this.scene = new Scene(this.getParent());
         this.stage = new Stage();
         this.stage.setScene(this.scene);
         this.stage.setOnCloseRequest(this::onCloseRequest);
-    }
-
-    public AbstractWindowController(String fxml){
-        this(XPlayerResource.class.getResource("fxml/"+fxml));
     }
 
     public Scene getScene() {
@@ -31,6 +28,13 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
 
     public Stage getStage() {
         return stage;
+    }
+
+    public void openWindow() {
+        Platform.runLater(() -> {
+            this.stage.show();
+            this.stage.toFront();
+        });
     }
 
     /**

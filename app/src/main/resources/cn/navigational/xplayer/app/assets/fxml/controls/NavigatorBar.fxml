@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" styleClass="navigator-bar">
+    <stylesheets>
+        <URL value="@../../css/NavigatorBarStyle.css"/>
+    </stylesheets>
+    <HBox styleClass="action-box">
+        <Button fx:id="back">
+            <graphic>
+                <ImageView>
+                    <Image url="@../../img/back.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button fx:id="go">
+            <graphic>
+                <ImageView>
+                    <Image url="@../../img/go.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button fx:id="flush">
+            <graphic>
+                <ImageView>
+                    <Image url="@../../img/flush.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+    <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
+</HBox>

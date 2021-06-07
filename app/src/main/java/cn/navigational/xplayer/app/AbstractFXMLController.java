@@ -15,7 +15,11 @@ public class AbstractFXMLController<T extends Parent> {
         this.fxmlURL = fxmlURL;
     }
 
-    protected synchronized T getParent() {
+    public AbstractFXMLController(String fxml){
+       this(XPlayerResource.class.getResource("fxml/"+fxml));
+    }
+
+    public synchronized T getParent() {
         if (parent == null) {
             this.parent = loadFXMLView(this.fxmlURL, this);
         }

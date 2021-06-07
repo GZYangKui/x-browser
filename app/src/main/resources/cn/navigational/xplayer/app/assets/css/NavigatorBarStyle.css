@@ -1,0 +1,21 @@
+.navigator-bar {
+    -fx-alignment: CENTER;
+    -fx-spacing: .3em;
+    -fx-padding: .5em;
+    -fx-background-color: #fff;
+    -fx-border-width: 0 0 0.08em 0;
+    -fx-border-color: #dadce0;
+}
+
+.navigator-bar .action-box {
+    -fx-spacing: .3em;
+    -fx-alignment: CENTER;
+}
+
+.action-box .button {
+    -fx-padding: 0;
+}
+
+.navigator-bar .button, .navigator-bar .text-field {
+    -fx-pref-height: 2.5em;
+}
