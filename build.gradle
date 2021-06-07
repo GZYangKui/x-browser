@@ -9,11 +9,31 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-}
+subprojects {
+    apply plugin:'java'
+    apply plugin: 'application'
 
-test {
-    useJUnitPlatform()
+    sourceCompatibility = 15
+    targetCompatibility = 15
+
+    sourceSets{
+        main{
+            java {
+                srcDirs = ['src/main/java']
+            }
+            resources {
+                srcDirs = ['src/main/resources']
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+    }
 }
