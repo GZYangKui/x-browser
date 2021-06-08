@@ -9,7 +9,7 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" styleClass="navigator-bar">
     <stylesheets>
-        <URL value="@../../css/NavigatorBarStyle.css"/>
+        <URL value="@../../css/controls/NavigatorBarStyle.css"/>
     </stylesheets>
     <HBox styleClass="action-box">
         <Button fx:id="back">

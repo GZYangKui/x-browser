@@ -1,0 +1,7 @@
+.bottom-box{
+    -fx-padding: .3em;
+    -fx-alignment: CENTER;
+    -fx-border-color: #dadce0;
+    -fx-background-color: #fff;
+    -fx-border-width: 0.08em 0 0 0;
+}
