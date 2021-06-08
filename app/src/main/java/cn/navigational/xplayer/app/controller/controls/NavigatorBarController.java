@@ -18,10 +18,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     @FXML
     private TextField textField;
 
-
     public NavigatorBarController(NavigatorBarService service) {
         super("controls/NavigatorBar.fxml");
-        getParent();
         service.getWebEngine().titleProperty().addListener((observable, oldValue, newValue) -> service.title(newValue));
         service.getWebEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
             this.textField.setText(newValue);

@@ -13,12 +13,16 @@ public class AbstractFXMLController<T extends Parent> {
 
     public AbstractFXMLController(URL fxmlURL) {
         this.fxmlURL = fxmlURL;
+        this.parent = getParent();
     }
 
-    public AbstractFXMLController(String fxml){
-       this(XPlayerResource.class.getResource("fxml/"+fxml));
+    public AbstractFXMLController(String fxml) {
+        this(XPlayerResource.class.getResource("fxml/" + fxml));
     }
 
+    /**
+     * 子类可以根据需求自定义覆盖实现获取{@link Parent}
+     */
     public synchronized T getParent() {
         if (parent == null) {
             this.parent = loadFXMLView(this.fxmlURL, this);

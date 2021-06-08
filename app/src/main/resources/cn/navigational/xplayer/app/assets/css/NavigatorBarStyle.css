@@ -7,6 +7,10 @@
     -fx-border-color: #dadce0;
 }
 
+.action-box .button, .navigator-bar .text-field {
+    -fx-pref-height: 2.5em;
+}
+
 .navigator-bar .action-box {
     -fx-spacing: .3em;
     -fx-alignment: CENTER;
@@ -16,6 +20,8 @@
     -fx-padding: 0;
 }
 
-.navigator-bar .button, .navigator-bar .text-field {
-    -fx-pref-height: 2.5em;
+.navigator-bar .right-box{
+    -fx-alignment: CENTER;
+    -fx-spacing: .3em;
 }
+

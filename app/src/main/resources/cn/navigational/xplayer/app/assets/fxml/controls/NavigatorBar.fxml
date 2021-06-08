@@ -34,5 +34,16 @@
             </graphic>
         </Button>
     </HBox>
-    <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
+    <HBox HBox.hgrow="ALWAYS" styleClass="right-box">
+        <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
+        <HBox styleClass="action-box">
+            <Button>
+                <graphic>
+                    <ImageView>
+                        <Image url="@../../img/func.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
 </HBox>
