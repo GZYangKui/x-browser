@@ -1,13 +1,10 @@
 package cn.navigational.xplayer.app;
 
-import cn.navigational.xplayer.app.assets.XPlayerResource;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.net.URL;
 
 
 public class AbstractWindowController<T extends Parent> extends AbstractFXMLController<T> {
