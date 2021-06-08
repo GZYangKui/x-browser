@@ -1,5 +1,6 @@
 package cn.navigational.xplayer.app;
 
+import cn.navigational.xplayer.app.assets.XPlayerResource;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
         this.stage = new Stage();
         this.stage.setScene(this.scene);
         this.stage.setOnCloseRequest(this::onCloseRequest);
+        this.stage.getIcons().add(XPlayerResource.loadImage("icon.png"));
     }
 
     public Scene getScene() {
