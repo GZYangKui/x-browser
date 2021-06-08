@@ -6,7 +6,7 @@ import cn.navigational.xplayer.app.controller.controls.NavigatorBarController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -33,7 +33,6 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         this.webEngine.load("https://www.baidu.com");
         this.navigatorBarController = new NavigatorBarController(this);
         this.getParent().setTop(this.navigatorBarController.getParent());
-        this.getStage().getIcons().add(XPlayerResource.loadImage("icon.png"));
     }
 
     @Override
