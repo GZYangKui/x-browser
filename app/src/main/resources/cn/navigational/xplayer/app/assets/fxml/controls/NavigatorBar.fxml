@@ -35,7 +35,23 @@
         </Button>
     </HBox>
     <HBox HBox.hgrow="ALWAYS" styleClass="right-box">
-        <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
+        <HBox HBox.hgrow="ALWAYS" styleClass="input-box" fx:id="inputBox">
+            <Button>
+                <graphic>
+                    <ImageView>
+                        <Image url="@../../img/engine/baidu.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
+            <Button>
+                <graphic>
+                    <ImageView>
+                        <Image url="@../../img/collect.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
         <HBox styleClass="action-box">
             <Button>
                 <graphic>

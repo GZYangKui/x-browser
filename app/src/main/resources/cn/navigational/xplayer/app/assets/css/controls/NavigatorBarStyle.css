@@ -1,3 +1,16 @@
+.button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.button, .text-field {
+    -fx-pref-height: 2em;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+}
+
 .navigator-bar {
     -fx-spacing: .3em;
     -fx-padding: .5em;
@@ -7,22 +20,28 @@
     -fx-background-color: #ffffff;
 }
 
-.action-box .button, .navigator-bar .text-field {
-    -fx-pref-height: 2em;
-}
 
 .navigator-bar .action-box {
     -fx-spacing: .3em;
     -fx-alignment: CENTER;
 }
 
-.action-box .button {
-    -fx-padding: 0;
-    -fx-background-color: #fff;
-}
-
-.navigator-bar .right-box{
+.navigator-bar .right-box {
     -fx-alignment: CENTER;
     -fx-spacing: .3em;
 }
 
+.right-box .input-box {
+    -fx-spacing: .3em;
+    -fx-alignment: CENTER;
+    -fx-border-width: .15em;
+    -fx-border-radius: 3em;
+    -fx-padding: .1em .5em;
+    -fx-background-radius: 3em;
+    -fx-border-color: #f1f3f4;
+    -fx-background-color: #f1f3f4;
+}
+
+.input-box-active {
+    -fx-border-color: #4285f4 !important;
+}

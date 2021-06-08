@@ -17,7 +17,10 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     @FXML
     private Button flush;
     @FXML
+    private HBox inputBox;
+    @FXML
     private TextField textField;
+
     private final WebEngine engine;
     private final NavigatorBarService service;
 
@@ -57,8 +60,19 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
                 return;
             }
             var max = engine.getHistory().getEntries().size();
-            if (getCurrentIndex() < max-1) {
+            if (getCurrentIndex() < max - 1) {
                 service.getWebEngine().getHistory().go(1);
+            }
+        });
+        this.textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            var styleClass = this.inputBox.getStyleClass();
+            if (!newValue) {
+                styleClass.remove("input-box-active");
+                return;
+            }
+            var contain = styleClass.contains("input-box-active");
+            if (!contain) {
+                styleClass.add("input-box-active");
             }
         });
         engine.titleProperty().addListener((observable, oldValue, newValue) -> service.title(newValue));
