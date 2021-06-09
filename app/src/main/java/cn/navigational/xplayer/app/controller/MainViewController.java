@@ -3,6 +3,7 @@ package cn.navigational.xplayer.app.controller;
 import cn.navigational.xplayer.app.AbstractWindowController;
 import cn.navigational.xplayer.app.assets.XPlayerResource;
 import cn.navigational.xplayer.app.controller.controls.NavigatorBarController;
+import cn.navigational.xplayer.app.event.WebEngineEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -32,6 +33,7 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         this.getStage().setTitle("x-browser");
         this.setSizeByProp(0.7,0.8);
         this.webEngine.load("https://www.baidu.com");
+        WebEngineEvent.create(this.webEngine);
         this.navigatorBarController = new NavigatorBarController(this);
         this.getParent().setTop(this.navigatorBarController.getParent());
     }
