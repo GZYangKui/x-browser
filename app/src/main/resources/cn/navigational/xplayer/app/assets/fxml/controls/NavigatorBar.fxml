@@ -36,13 +36,7 @@
     </HBox>
     <HBox HBox.hgrow="ALWAYS" styleClass="right-box">
         <HBox HBox.hgrow="ALWAYS" styleClass="input-box" fx:id="inputBox">
-            <Button>
-                <graphic>
-                    <ImageView>
-                        <Image url="@../../img/engine/baidu.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
+            <Button fx:id="sEngine"/>
             <TextField HBox.hgrow="ALWAYS" fx:id="textField"/>
             <Button>
                 <graphic>

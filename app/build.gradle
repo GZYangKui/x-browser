@@ -2,13 +2,21 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
+group 'cn.navigational'
+version '1.0-SNAPSHOT'
+
 mainClassName = 'cn.navigational.xplayer.app.XPlayer'
 
+//jvm args
+applicationDefaultJvmArgs = ['-Dsun.java2d.opengl=true', '-XX:+UseZGC', '-Xms512M', '-Xmx1024M']
+if (javafx.platform.classifier == 'linux') applicationDefaultJvmArgs.add("-Djdk.gtk.version=2")
+
 javafx {
-    version = "15.0.1"
+    version = "17-ea+11"
     modules = [ 'javafx.controls','javafx.fxml','javafx.web' ]
 }
 
-group 'cn.navigational'
-version '1.0-SNAPSHOT'
+dependencies {
+    compile project(":kit")
+}
 

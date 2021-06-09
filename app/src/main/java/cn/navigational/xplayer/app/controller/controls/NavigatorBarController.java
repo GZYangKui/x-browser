@@ -1,10 +1,16 @@
 package cn.navigational.xplayer.app.controller.controls;
 
 import cn.navigational.xplayer.app.AbstractFXMLController;
+import cn.navigational.xplayer.app.assets.XPlayerResource;
+import cn.navigational.xplayer.kit.enums.SearchEngine;
+import cn.navigational.xplayer.kit.util.StringUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
@@ -19,6 +25,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     @FXML
     private HBox inputBox;
     @FXML
+    private Button sEngine;
+    @FXML
     private TextField textField;
 
     private final WebEngine engine;
@@ -28,6 +36,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         super("controls/NavigatorBar.fxml");
         this.service = service;
         this.engine = service.getWebEngine();
+        this.switchEngine(SearchEngine.BAIDU);
         this.init();
     }
 
@@ -75,6 +84,16 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
                 styleClass.add("input-box-active");
             }
         });
+        this.textField.setOnKeyPressed(event -> {
+            if (event.getCode() != KeyCode.ENTER) {
+                return;
+            }
+            var keyword = this.textField.getText();
+            if (StringUtil.isNotEmpty(keyword)) {
+                var url = ((SearchEngine) this.sEngine.getUserData()).getUrl(keyword);
+                this.engine.load(url);
+            }
+        });
         engine.titleProperty().addListener((observable, oldValue, newValue) -> service.title(newValue));
         engine.locationProperty().addListener((observable, oldValue, newValue) -> {
             this.textField.setText(newValue);
@@ -86,6 +105,22 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private int getCurrentIndex() {
         var history = engine.getHistory();
         return history.getCurrentIndex();
+    }
+
+    private void switchEngine(SearchEngine engine) {
+        var image = this.getSEngineIcon(engine);
+        this.sEngine.setUserData(engine);
+        this.sEngine.setGraphic(new ImageView(image));
+    }
+
+    private Image getSEngineIcon(SearchEngine engine) {
+        final String icon;
+        if (engine == SearchEngine.BAIDU) {
+            icon = "engine/baidu.png";
+        } else {
+            icon = "engine/google.png";
+        }
+        return XPlayerResource.loadImage(icon);
     }
 
     public interface NavigatorBarService {
