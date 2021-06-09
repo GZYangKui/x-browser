@@ -4,6 +4,7 @@ import cn.navigational.xplayer.app.assets.XPlayerResource;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -34,6 +35,18 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
             this.stage.show();
             this.stage.toFront();
         });
+    }
+
+    /**
+     * 根据屏幕尺寸按照比例设置窗口大小
+     */
+    protected void setSizeByProp(double wProp, double hProp) {
+        var screen = Screen.getPrimary();
+        var rect = screen.getVisualBounds();
+        var width = Math.floor(rect.getWidth() * wProp);
+        var height = Math.floor(rect.getHeight() * hProp);
+        this.stage.setWidth(width);
+        this.stage.setHeight(height);
     }
 
     /**

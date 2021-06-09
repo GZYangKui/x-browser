@@ -30,6 +30,7 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         super("MainView.fxml");
         this.webEngine = webView.getEngine();
         this.getStage().setTitle("x-browser");
+        this.setSizeByProp(0.7,0.8);
         this.webEngine.load("https://www.baidu.com");
         this.navigatorBarController = new NavigatorBarController(this);
         this.getParent().setTop(this.navigatorBarController.getParent());
