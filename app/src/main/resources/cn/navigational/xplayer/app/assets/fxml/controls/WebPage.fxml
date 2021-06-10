@@ -7,14 +7,9 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.web.WebView?>
-<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
-    <stylesheets>
-        <URL value="@../css/MainViewStyle.css"/>
-    </stylesheets>
+            xmlns:fx="http://javafx.com/fxml">
     <center>
-        <TabPane fx:id="tabPane"/>
+        <WebView fx:id="webView"/>
     </center>
 </BorderPane>

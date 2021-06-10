@@ -2,6 +2,7 @@ package cn.navigational.xplayer.app.controller.controls;
 
 import cn.navigational.xplayer.app.AbstractFXMLController;
 import cn.navigational.xplayer.app.assets.XPlayerResource;
+import cn.navigational.xplayer.kit.Closeable;
 import cn.navigational.xplayer.kit.enums.SearchEngine;
 import cn.navigational.xplayer.kit.util.StringUtil;
 import cn.navigational.xplayer.kit.util.URLUtil;
@@ -14,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
@@ -33,9 +35,18 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private TextField textField;
 
     private final WebEngine engine;
+
     private final NavigatorBarService service;
 
     private SearchEngine searchEngine;
+
+    private final ChangeListener<String> urlChangeListener = this.urlChangeListener();
+
+    private final ChangeListener<Boolean> focusListener = this.textInputFocusListener();
+
+    private final ChangeListener<String> titleChangeListener = this.titleChangeListener();
+
+    private final ChangeListener<Worker.State> stateChangeListener = this.stateChangeListener();
 
 
     public NavigatorBarController(NavigatorBarService service) {
@@ -43,76 +54,13 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.service = service;
         this.engine = service.getWebEngine();
         this.switchEngine(SearchEngine.BAIDU);
-        this.init();
+        this.textField.setOnKeyPressed(this::textInputChange);
+        this.textField.focusedProperty().addListener(this.focusListener);
+        this.engine.titleProperty().addListener(this.titleChangeListener);
+        this.engine.locationProperty().addListener(this.urlChangeListener);
+        this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
     }
 
-    /**
-     * 初始化浏览器事件
-     */
-    private void init() {
-        this.back.setOnAction(event -> {
-            this.service.back(event);
-            if (event.isConsumed()) {
-                return;
-            }
-            if (getCurrentIndex() <= 0) {
-                return;
-            }
-            engine.getHistory().go(-1);
-        });
-
-        this.flush.setOnAction(event -> {
-            this.service.flush(event);
-            if (event.isConsumed()) {
-                return;
-            }
-            var state = this.engine.getLoadWorker().getState();
-            if (state == Worker.State.CANCELLED || state == Worker.State.SUCCEEDED || state == Worker.State.FAILED) {
-                engine.reload();
-            } else {
-                this.engine.getLoadWorker().cancel();
-            }
-        });
-
-        this.go.setOnAction(event -> {
-            service.go(event);
-            if (event.isConsumed()) {
-                return;
-            }
-            var max = engine.getHistory().getEntries().size();
-            if (getCurrentIndex() < max - 1) {
-                service.getWebEngine().getHistory().go(1);
-            }
-        });
-        this.textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            var styleClass = this.inputBox.getStyleClass();
-            if (!newValue) {
-                styleClass.remove("input-box-active");
-                return;
-            }
-            var contain = styleClass.contains("input-box-active");
-            if (!contain) {
-                styleClass.add("input-box-active");
-            }
-        });
-        this.textField.setOnKeyPressed(event -> {
-            if (event.getCode() != KeyCode.ENTER) {
-                return;
-            }
-            var keyword = this.textField.getText();
-            if (StringUtil.isEmpty(keyword)) {
-                return;
-            }
-            this.engine.load(URLUtil.getUrl(this.searchEngine, keyword));
-        });
-        this.engine.titleProperty().addListener((observable, oldValue, newValue) -> service.title(newValue));
-        this.engine.locationProperty().addListener((observable, oldValue, newValue) -> {
-            this.textField.setText(newValue);
-            service.url(newValue);
-        });
-        this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener());
-        this.engine.getLoadWorker().progressProperty().addListener((observable, oldValue, newValue) -> this.service.progress(newValue.doubleValue()));
-    }
 
     private int getCurrentIndex() {
         var history = engine.getHistory();
@@ -125,19 +73,115 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     }
 
     /**
+     * 浏览器前进事件
+     */
+    @FXML
+    private void go(ActionEvent event) {
+        service.go(event);
+        if (event.isConsumed()) {
+            return;
+        }
+        var max = engine.getHistory().getEntries().size();
+        if (getCurrentIndex() < max - 1) {
+            service.getWebEngine().getHistory().go(1);
+        }
+    }
+
+    /**
+     * 浏览器后退事件
+     */
+    @FXML
+    private void back(ActionEvent event) {
+        this.service.back(event);
+        if (event.isConsumed()) {
+            return;
+        }
+        if (getCurrentIndex() <= 0) {
+            return;
+        }
+        engine.getHistory().go(-1);
+    }
+
+    /**
+     * 刷新事件
+     */
+    @FXML
+    private void flush(ActionEvent event) {
+        this.service.flush(event);
+        if (event.isConsumed()) {
+            return;
+        }
+        var state = this.engine.getLoadWorker().getState();
+        if (state == Worker.State.CANCELLED || state == Worker.State.SUCCEEDED || state == Worker.State.FAILED) {
+            engine.reload();
+        } else {
+            this.engine.getLoadWorker().cancel();
+        }
+    }
+
+    /**
+     * 监听{@link WebEngine#locationProperty()}属性
+     */
+    private ChangeListener<String> urlChangeListener() {
+        return (observable, oldValue, newValue) -> {
+            this.textField.setText(newValue);
+            service.url(newValue);
+        };
+    }
+
+    /**
+     * 监听{@link WebEngine#titleProperty()}属性
+     */
+    private ChangeListener<String> titleChangeListener() {
+        return (observable, oldValue, newValue) -> this.service.title(newValue);
+    }
+
+    /**
+     * 监听{@link TextField} 是否获取焦点
+     */
+    private ChangeListener<Boolean> textInputFocusListener() {
+        return (observable, oldValue, newValue) -> {
+            var styleClass = this.inputBox.getStyleClass();
+            if (!newValue) {
+                styleClass.remove("input-box-active");
+                return;
+            }
+            var contain = styleClass.contains("input-box-active");
+            if (!contain) {
+                styleClass.add("input-box-active");
+            }
+        };
+    }
+
+    /**
+     * 监听当前输入是否按下ENTER,如果按下处理对应的逻辑{搜索/网页跳转}
+     */
+    private void textInputChange(KeyEvent event) {
+        if (event.getCode() != KeyCode.ENTER) {
+            return;
+        }
+        var keyword = this.textField.getText();
+        if (StringUtil.isEmpty(keyword)) {
+            return;
+        }
+        this.engine.load(URLUtil.getUrl(this.searchEngine, keyword));
+    }
+
+    /**
      * 监听{@link WebEngine}加载状态
      */
     private ChangeListener<Worker.State> stateChangeListener() {
         return ((observable, oldValue, newValue) -> {
             final Image image;
             //显示刷新图标
-            if (newValue == Worker.State.CANCELLED || newValue == Worker.State.SUCCEEDED || newValue == Worker.State.FAILED) {
+            if (isComplete(newValue)) {
                 image = XPlayerResource.loadImage("flush.png");
             } else {
                 //显示中断
                 image = XPlayerResource.loadImage("cancel.png");
             }
             this.flush.setGraphic(new ImageView(image));
+            this.service.state(newValue);
         });
     }
 
@@ -151,7 +195,25 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         return XPlayerResource.loadImage(icon);
     }
 
-    public interface NavigatorBarService {
+    /**
+     * 判断当前加载工作是否完成
+     */
+    public boolean isComplete(Worker.State state) {
+        return state == Worker.State.CANCELLED
+                || state == Worker.State.SUCCEEDED
+                || state == Worker.State.FAILED;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.textField.focusedProperty().removeListener(this.focusListener);
+        this.engine.titleProperty().removeListener(this.titleChangeListener);
+        this.engine.locationProperty().removeListener(this.urlChangeListener);
+        this.engine.getLoadWorker().stateProperty().removeListener(this.stateChangeListener);
+    }
+
+    public interface NavigatorBarService extends Closeable {
         /**
          * 后退事件触发
          */
@@ -188,6 +250,13 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
          * @param value 进度值
          */
         default void progress(double value) {
+
+        }
+
+        /**
+         * 网页加载状态发生改变时回调当前函数
+         */
+        default void state(Worker.State state) {
 
         }
 

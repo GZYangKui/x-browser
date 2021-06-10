@@ -1,13 +1,14 @@
 package cn.navigational.xplayer.app;
 
 import cn.navigational.xplayer.app.assets.XPlayerResource;
+import cn.navigational.xplayer.kit.Closeable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class AbstractFXMLController<T extends Parent> {
+public class AbstractFXMLController<T extends Parent> implements Closeable {
     private T parent;
     private final URL fxmlURL;
 

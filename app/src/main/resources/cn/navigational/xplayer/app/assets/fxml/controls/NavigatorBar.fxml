@@ -12,21 +12,21 @@
         <URL value="@../../css/controls/NavigatorBarStyle.css"/>
     </stylesheets>
     <HBox styleClass="action-box">
-        <Button fx:id="back">
+        <Button fx:id="back" onAction="#back">
             <graphic>
                 <ImageView>
                     <Image url="@../../img/back.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="go">
+        <Button fx:id="go" onAction="#go">
             <graphic>
                 <ImageView>
                     <Image url="@../../img/go.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="flush">
+        <Button fx:id="flush" onAction="#flush">
             <graphic>
                 <ImageView>
                     <Image url="@../../img/flush.png"/>

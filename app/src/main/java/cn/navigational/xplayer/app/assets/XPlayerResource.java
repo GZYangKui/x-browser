@@ -3,15 +3,25 @@ package cn.navigational.xplayer.app.assets;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XPlayerResource {
     private static final String BASE_IMG_PATH = "img/";
+
     /**
      * 缓存图片资源
      */
     private static final Map<String, Image> IMG_CACHED = new ConcurrentHashMap<>();
+
+    /**
+     * 程序全局样式
+     */
+    public static final String APP_STYLE = Objects
+            .requireNonNull(XPlayerResource.class.getResource("css/Application.css"))
+            .toExternalForm();
 
     /**
      * 加载jar内部图片资源

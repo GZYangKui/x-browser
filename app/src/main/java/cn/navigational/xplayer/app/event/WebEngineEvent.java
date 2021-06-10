@@ -1,12 +1,11 @@
 package cn.navigational.xplayer.app.event;
 
+import cn.navigational.xplayer.app.controller.MainViewController;
+import cn.navigational.xplayer.app.controller.web.impl.WebPageController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.web.PromptData;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebErrorEvent;
-import javafx.scene.web.WebEvent;
+import javafx.scene.web.*;
 
 import java.util.Optional;
 
@@ -18,11 +17,18 @@ public class WebEngineEvent {
 
     private WebEngineEvent(WebEngine engine) {
         this.engine = engine;
+
         this.engine.setOnAlert(this::onAlert);
         this.engine.setOnError(this::onError);
         this.engine.setPromptHandler(this::prompt);
         this.engine.setConfirmHandler(this::confirm);
-
+        this.engine.setCreatePopupHandler(param -> {
+            var controller = new WebPageController();
+            MainViewController
+                    .getInstance()
+                    .createPopupWindow(controller);
+            return controller.getWebEngine();
+        });
     }
 
     /**

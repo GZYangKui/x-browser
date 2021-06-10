@@ -1,0 +1,4 @@
+.web-tab .progress-indicator {
+    -fx-pref-height: 1.5em;
+    -fx-pref-width: 1.5em;
+}

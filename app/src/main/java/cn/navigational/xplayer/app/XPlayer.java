@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 public class XPlayer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        new MainViewController().openWindow();
+        MainViewController.getInstance().openWindow();
     }
 
     public static void main(String[] args) {
