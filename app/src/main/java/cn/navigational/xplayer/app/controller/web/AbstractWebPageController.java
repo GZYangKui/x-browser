@@ -4,8 +4,11 @@ import cn.navigational.xplayer.app.controller.controls.NavigatorBarController;
 import cn.navigational.xplayer.app.event.WebEngineEvent;
 import javafx.concurrent.Worker;
 
+import javafx.scene.Node;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -46,12 +49,22 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     public void state(Worker.State state) {
         var complete = this.navigatorBarController.isComplete(state);
         if (complete) {
-            this.tab.setGraphic(null);
+            this.tab.setGraphic(this.favicon());
         } else {
             var indicator = new ProgressIndicator();
             indicator.setPrefSize(10, 10);
             this.tab.setGraphic(new ProgressIndicator());
         }
+    }
+
+    public Node favicon() {
+        var optional = this.navigatorBarController.getLocation();
+        if (optional.isEmpty()) {
+            return null;
+        }
+        var location = optional.get();
+        var image = new Image(location.favicon(), true);
+        return new ImageView(image);
     }
 
     @Override

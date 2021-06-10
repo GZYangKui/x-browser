@@ -3,6 +3,7 @@ package cn.navigational.xplayer.app.controller.controls;
 import cn.navigational.xplayer.app.AbstractFXMLController;
 import cn.navigational.xplayer.app.assets.XPlayerResource;
 import cn.navigational.xplayer.kit.Closeable;
+import cn.navigational.xplayer.kit.Location;
 import cn.navigational.xplayer.kit.enums.SearchEngine;
 import cn.navigational.xplayer.kit.util.StringUtil;
 import cn.navigational.xplayer.kit.util.URLUtil;
@@ -18,6 +19,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
+
+import java.util.Optional;
 
 
 public class NavigatorBarController extends AbstractFXMLController<HBox> {
@@ -202,6 +205,17 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         return state == Worker.State.CANCELLED
                 || state == Worker.State.SUCCEEDED
                 || state == Worker.State.FAILED;
+    }
+
+    /**
+     * 获取当前网页{@link Location}对象
+     */
+    public Optional<Location> getLocation() {
+        var str = engine.getLocation();
+        if (StringUtil.isEmpty(str)) {
+            return Optional.empty();
+        }
+        return Optional.of(Location.create(str));
     }
 
     @Override
