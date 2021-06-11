@@ -15,14 +15,14 @@
         <Button fx:id="back" onAction="#back">
             <graphic>
                 <ImageView>
-                    <Image url="@../../img/back.png"/>
+                    <Image url="@../../img/back_disable.png"/>
                 </ImageView>
             </graphic>
         </Button>
         <Button fx:id="go" onAction="#go">
             <graphic>
                 <ImageView>
-                    <Image url="@../../img/go.png"/>
+                    <Image url="@../../img/go_disable.png"/>
                 </ImageView>
             </graphic>
         </Button>

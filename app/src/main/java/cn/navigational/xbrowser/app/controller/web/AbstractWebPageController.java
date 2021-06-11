@@ -1,6 +1,6 @@
 package cn.navigational.xbrowser.app.controller.web;
 
-import cn.navigational.xbrowser.app.assets.XBrowserResource;
+import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.event.WebEngineEvent;
@@ -25,7 +25,7 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     public AbstractWebPageController() {
         var webView = new WebView();
         this.engine = webView.getEngine();
-        this.favicon = XBrowserResource.loadImage("favicon.png");
+        this.favicon = XResource.loadImage("favicon.png");
         this.navigatorBarController = new NavigatorBarController(this);
 
         var root = new BorderPane();

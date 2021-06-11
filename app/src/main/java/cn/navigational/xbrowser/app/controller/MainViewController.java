@@ -4,7 +4,9 @@ import cn.navigational.xbrowser.app.AbstractWindowController;
 import cn.navigational.xbrowser.app.controller.web.AbstractWebPageController;
 import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
 import cn.navigational.xbrowser.kit.util.StringUtil;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -25,13 +27,32 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
         this.setSizeByProp(0.7, 0.8);
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
         this.tabPane.getTabs().add(new WebPageController().getTab());
+        this.tabPane.getTabs().addListener(this.tabListChangeListener());
     }
+
+    /**
+     * 监听{@link TabPane#getTabs()}列表改变事件
+     */
+    private ListChangeListener<Tab> tabListChangeListener() {
+        return c -> {
+            while (c.next()) {
+                //如果当前TabPane中Tab被全部移出,退出程序
+                if (c.wasRemoved() && this.tabPane.getTabs().isEmpty()) {
+                    Platform.exit();
+                }
+            }
+        };
+    }
+
 
     /**
      * 监听tab选中事件,动态改变当前窗口标题
      */
     private ChangeListener<Tab> tabSelectChangeListener() {
         return (observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
             var controller = newValue.getUserData();
             if (!(controller instanceof AbstractWebPageController)) {
                 return;

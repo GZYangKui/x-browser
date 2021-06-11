@@ -1,6 +1,6 @@
 package cn.navigational.xbrowser.app;
 
-import cn.navigational.xbrowser.app.assets.XBrowserResource;
+import cn.navigational.xbrowser.app.assets.XResource;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,8 +19,8 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
         this.stage = new Stage();
         this.stage.setScene(this.scene);
         this.stage.setOnCloseRequest(this::onCloseRequest);
-        this.scene.getStylesheets().add(XBrowserResource.APP_STYLE);
-        this.stage.getIcons().add(XBrowserResource.loadImage("icon.png"));
+        this.scene.getStylesheets().add(XResource.APP_STYLE);
+        this.stage.getIcons().add(XResource.loadImage("icon.png"));
     }
 
     public Scene getScene() {

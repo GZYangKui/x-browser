@@ -1,7 +1,7 @@
 package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
-import cn.navigational.xbrowser.app.assets.XBrowserResource;
+import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.Location;
 import cn.navigational.xbrowser.kit.enums.SearchEngine;
@@ -21,7 +21,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 
 public class NavigatorBarController extends AbstractFXMLController<HBox> {
@@ -44,12 +43,13 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
 
     private final NavigatorBarService service;
 
-
     private final ChangeListener<String> urlChangeListener = this.urlChangeListener();
 
     private final ChangeListener<Boolean> focusListener = this.textInputFocusListener();
 
     private final ChangeListener<String> titleChangeListener = this.titleChangeListener();
+
+    private final ChangeListener<Number> indexChangeListener = this.indexChangeListener();
 
     private final ChangeListener<Worker.State> stateChangeListener = this.stateChangeListener();
 
@@ -64,6 +64,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.engine.titleProperty().addListener(this.titleChangeListener);
         this.engine.locationProperty().addListener(this.urlChangeListener);
         this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
+        this.engine.getHistory().currentIndexProperty().addListener(this.indexChangeListener);
     }
 
 
@@ -124,6 +125,27 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         }
     }
 
+    /**
+     * {@link WebEngine#getHistory()#indexChangeListener()}
+     */
+    private ChangeListener<Number> indexChangeListener() {
+        return (observable, oldValue, newValue) -> {
+            var index = newValue.intValue();
+            var max = this.engine.getHistory().getEntries().size();
+            //判断前进按钮是否可用
+            if (index != max - 1) {
+                this.go.setGraphic(new ImageView(XResource.loadImage("go.png")));
+            } else {
+                this.go.setGraphic(new ImageView(XResource.loadImage("go_disable.png")));
+            }
+            //判断后退按钮是否可用
+            if (index > 0) {
+                this.back.setGraphic(new ImageView(XResource.loadImage("back.png")));
+            } else {
+                this.back.setGraphic(new ImageView(XResource.loadImage("back_disable.png")));
+            }
+        };
+    }
 
     /**
      * 监听{@link WebEngine#locationProperty()}属性
@@ -181,10 +203,10 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             final Image image;
             //显示刷新图标
             if (isComplete(newValue)) {
-                image = XBrowserResource.loadImage("flush.png");
+                image = XResource.loadImage("flush.png");
             } else {
                 //显示中断
-                image = XBrowserResource.loadImage("cancel.png");
+                image = XResource.loadImage("cancel.png");
             }
             this.flush.setGraphic(new ImageView(image));
             this.service.state(newValue);
@@ -198,7 +220,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         } else {
             icon = "engine/google.png";
         }
-        return XBrowserResource.loadImage(icon);
+        return XResource.loadImage(icon);
     }
 
     /**
@@ -229,6 +251,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.engine.titleProperty().removeListener(this.titleChangeListener);
         this.engine.locationProperty().removeListener(this.urlChangeListener);
         this.engine.getLoadWorker().stateProperty().removeListener(this.stateChangeListener);
+        this.engine.getHistory().currentIndexProperty().removeListener(this.indexChangeListener);
     }
 
     public interface NavigatorBarService extends Closeable {
