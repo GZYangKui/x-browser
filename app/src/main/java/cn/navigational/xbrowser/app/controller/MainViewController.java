@@ -3,11 +3,13 @@ package cn.navigational.xbrowser.app.controller;
 import cn.navigational.xbrowser.app.AbstractWindowController;
 import cn.navigational.xbrowser.app.controller.web.AbstractWebPageController;
 import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
+import cn.navigational.xbrowser.kit.util.StringUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebEngine;
 
 
 /**
@@ -27,25 +29,32 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
 
     private ChangeListener<Tab> tabSelectChangeListener() {
         return (observable, oldValue, newValue) -> {
-//            var userData = newValue.getUserData();
-//            if (!(userData instanceof WebPageController)){
-//                return;
-//            }
-//            var navigatorBar = ((WebPageController) userData).getNavigatorBar();
-//            this.getParent().setTop(navigatorBar);
+
         };
     }
 
-    public void createPopupWindow(AbstractWebPageController webPageController) {
-        var tab = webPageController.getTab();
+    /**
+     * 处理window.open 打开窗口事件
+     */
+    public WebEngine createPopupWindow() {
+        var controller = new WebPageController();
+        var tab = controller.getTab();
         this.tabPane.getTabs().add(tab);
         this.tabPane.getSelectionModel().select(tab);
+        return controller.getWebEngine();
     }
 
     /**
      * 更新窗口标题
      */
-    public void updateTitle(String title) {
+    public void updateTitle(String title, Tab target) {
+        var current = this.tabPane.getSelectionModel().getSelectedItem();
+        if (current != target) {
+            return;
+        }
+        if (StringUtil.isEmpty(title)){
+            title = "x-browser";
+        }
         this.getStage().setTitle(title);
     }
 

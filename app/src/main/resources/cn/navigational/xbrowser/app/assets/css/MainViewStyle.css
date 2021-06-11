@@ -11,5 +11,6 @@
 }
 
 .tab-pane .tab-header-background{
+    -fx-padding: 0;
     -fx-background-color: #dee1e6;
 }

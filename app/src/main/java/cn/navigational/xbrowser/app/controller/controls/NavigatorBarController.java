@@ -1,7 +1,7 @@
 package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
-import cn.navigational.xbrowser.app.assets.XPlayerResource;
+import cn.navigational.xbrowser.app.assets.XBrowserResource;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.Location;
 import cn.navigational.xbrowser.kit.enums.SearchEngine;
@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 
 public class NavigatorBarController extends AbstractFXMLController<HBox> {
@@ -39,9 +40,10 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
 
     private final WebEngine engine;
 
+    private SearchEngine searchEngine;
+
     private final NavigatorBarService service;
 
-    private SearchEngine searchEngine;
 
     private final ChangeListener<String> urlChangeListener = this.urlChangeListener();
 
@@ -122,6 +124,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         }
     }
 
+
     /**
      * 监听{@link WebEngine#locationProperty()}属性
      */
@@ -178,10 +181,10 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             final Image image;
             //显示刷新图标
             if (isComplete(newValue)) {
-                image = XPlayerResource.loadImage("flush.png");
+                image = XBrowserResource.loadImage("flush.png");
             } else {
                 //显示中断
-                image = XPlayerResource.loadImage("cancel.png");
+                image = XBrowserResource.loadImage("cancel.png");
             }
             this.flush.setGraphic(new ImageView(image));
             this.service.state(newValue);
@@ -195,7 +198,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         } else {
             icon = "engine/google.png";
         }
-        return XPlayerResource.loadImage(icon);
+        return XBrowserResource.loadImage(icon);
     }
 
     /**
@@ -217,6 +220,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         }
         return Optional.of(Location.create(str));
     }
+
 
     @Override
     public void dispose() {

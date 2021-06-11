@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class XPlayerResource {
+public class XBrowserResource {
     private static final String BASE_IMG_PATH = "img/";
 
     /**
@@ -19,7 +19,7 @@ public class XPlayerResource {
      * 程序全局样式
      */
     public static final String APP_STYLE = Objects
-            .requireNonNull(XPlayerResource.class.getResource("css/Application.css"))
+            .requireNonNull(XBrowserResource.class.getResource("css/Application.css"))
             .toExternalForm();
 
     /**
@@ -31,7 +31,7 @@ public class XPlayerResource {
         if (img != null) {
             return img;
         }
-        var url = XPlayerResource.class.getResource(key);
+        var url = XBrowserResource.class.getResource(key);
         try {
             assert url != null;
             img = new Image(url.openStream());

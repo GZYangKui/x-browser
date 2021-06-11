@@ -1,13 +1,43 @@
 .web-tab {
     -fx-pref-width: 20em;
+    -fx-pref-height: 2.5em;
+    -fx-background-color: #dee1e6;
+    -fx-border-radius: .5em .5em 0 0;
+    -fx-background-radius: .5em .5em 0 0;
+}
+
+.web-tab:selected {
+    -fx-background-color: #fff;
+}
+
+.web-tab:selected .focus-indicator {
+    -fx-border-color: transparent;
 }
 
 .web-tab .tab-label {
     -fx-pref-width: 17em;
-    -fx-text-alignment: LEFT-CENTER;
+    -fx-text-alignment: LEFT;
 }
 
 .web-tab .progress-indicator {
     -fx-pref-width: 1.5em;
     -fx-pref-height: 1.5em;
+}
+
+.scroll-bar .track, .scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: #f1f1f1;
+}
+
+.scroll-bar .thumb {
+    -fx-border-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: #c1c1c1;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 1.1em;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-width: 1.1em;
 }

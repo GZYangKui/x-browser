@@ -22,13 +22,7 @@ public class WebEngineEvent {
         this.engine.setOnError(this::onError);
         this.engine.setPromptHandler(this::prompt);
         this.engine.setConfirmHandler(this::confirm);
-        this.engine.setCreatePopupHandler(param -> {
-            var controller = new WebPageController();
-            MainViewController
-                    .getInstance()
-                    .createPopupWindow(controller);
-            return controller.getWebEngine();
-        });
+        this.engine.setCreatePopupHandler(param -> MainViewController.getInstance().createPopupWindow());
     }
 
     /**

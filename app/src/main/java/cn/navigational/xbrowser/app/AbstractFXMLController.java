@@ -1,6 +1,6 @@
 package cn.navigational.xbrowser.app;
 
-import cn.navigational.xbrowser.app.assets.XPlayerResource;
+import cn.navigational.xbrowser.app.assets.XBrowserResource;
 import cn.navigational.xbrowser.kit.Closeable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +18,7 @@ public class AbstractFXMLController<T extends Parent> implements Closeable {
     }
 
     public AbstractFXMLController(String fxml) {
-        this(XPlayerResource.class.getResource("fxml/" + fxml));
+        this(XBrowserResource.class.getResource("fxml/" + fxml));
     }
 
     /**
