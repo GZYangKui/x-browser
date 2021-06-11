@@ -1,4 +1,13 @@
+.web-tab {
+    -fx-pref-width: 20em;
+}
+
+.web-tab .tab-label {
+    -fx-pref-width: 17em;
+    -fx-text-alignment: LEFT-CENTER;
+}
+
 .web-tab .progress-indicator {
-    -fx-pref-height: 1.5em;
     -fx-pref-width: 1.5em;
+    -fx-pref-height: 1.5em;
 }
