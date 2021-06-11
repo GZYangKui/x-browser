@@ -1,6 +1,6 @@
-package cn.navigational.xplayer.app.controller.web.impl;
+package cn.navigational.xbrowser.app.controller.web.impl;
 
-import cn.navigational.xplayer.app.controller.web.AbstractWebPageController;
+import cn.navigational.xbrowser.app.controller.web.AbstractWebPageController;
 
 
 public class WebPageController extends AbstractWebPageController {

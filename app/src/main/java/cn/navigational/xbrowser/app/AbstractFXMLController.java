@@ -1,7 +1,7 @@
-package cn.navigational.xplayer.app;
+package cn.navigational.xbrowser.app;
 
-import cn.navigational.xplayer.app.assets.XPlayerResource;
-import cn.navigational.xplayer.kit.Closeable;
+import cn.navigational.xbrowser.app.assets.XPlayerResource;
+import cn.navigational.xbrowser.kit.Closeable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 

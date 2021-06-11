@@ -5,7 +5,7 @@ plugins {
 group 'cn.navigational'
 version '1.0-SNAPSHOT'
 
-mainClassName = 'cn.navigational.xplayer.app.XPlayer'
+mainClassName = 'cn.navigational.xbrowser.app.XBrowser'
 
 //jvm args
 applicationDefaultJvmArgs = ['-Dsun.java2d.opengl=true', '-XX:+UseZGC', '-Xms512M', '-Xmx1024M']

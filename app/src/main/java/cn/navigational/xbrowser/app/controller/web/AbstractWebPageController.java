@@ -1,7 +1,7 @@
-package cn.navigational.xplayer.app.controller.web;
+package cn.navigational.xbrowser.app.controller.web;
 
-import cn.navigational.xplayer.app.controller.controls.NavigatorBarController;
-import cn.navigational.xplayer.app.event.WebEngineEvent;
+import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
+import cn.navigational.xbrowser.app.event.WebEngineEvent;
 import javafx.concurrent.Worker;
 
 import javafx.scene.Node;

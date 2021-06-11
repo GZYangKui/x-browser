@@ -1,4 +1,4 @@
-package cn.navigational.xplayer.kit.enums;
+package cn.navigational.xbrowser.kit.enums;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

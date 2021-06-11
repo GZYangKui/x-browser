@@ -1,10 +1,10 @@
-package cn.navigational.xplayer.app;
+package cn.navigational.xbrowser.app;
 
-import cn.navigational.xplayer.app.controller.MainViewController;
+import cn.navigational.xbrowser.app.controller.MainViewController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class XPlayer extends Application {
+public class XBrowser extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         MainViewController.getInstance().openWindow();

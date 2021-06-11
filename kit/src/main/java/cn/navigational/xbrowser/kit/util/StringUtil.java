@@ -1,4 +1,4 @@
-package cn.navigational.xplayer.kit.util;
+package cn.navigational.xbrowser.kit.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

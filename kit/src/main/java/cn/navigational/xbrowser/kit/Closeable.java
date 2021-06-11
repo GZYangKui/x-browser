@@ -1,4 +1,4 @@
-package cn.navigational.xplayer.kit;
+package cn.navigational.xbrowser.kit;
 
 public interface Closeable {
     /**

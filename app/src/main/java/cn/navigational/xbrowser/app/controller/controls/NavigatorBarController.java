@@ -1,12 +1,12 @@
-package cn.navigational.xplayer.app.controller.controls;
+package cn.navigational.xbrowser.app.controller.controls;
 
-import cn.navigational.xplayer.app.AbstractFXMLController;
-import cn.navigational.xplayer.app.assets.XPlayerResource;
-import cn.navigational.xplayer.kit.Closeable;
-import cn.navigational.xplayer.kit.Location;
-import cn.navigational.xplayer.kit.enums.SearchEngine;
-import cn.navigational.xplayer.kit.util.StringUtil;
-import cn.navigational.xplayer.kit.util.URLUtil;
+import cn.navigational.xbrowser.app.AbstractFXMLController;
+import cn.navigational.xbrowser.app.assets.XPlayerResource;
+import cn.navigational.xbrowser.kit.Closeable;
+import cn.navigational.xbrowser.kit.Location;
+import cn.navigational.xbrowser.kit.enums.SearchEngine;
+import cn.navigational.xbrowser.kit.util.StringUtil;
+import cn.navigational.xbrowser.kit.util.URLUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;

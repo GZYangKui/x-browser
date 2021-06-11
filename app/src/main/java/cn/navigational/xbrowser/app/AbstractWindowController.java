@@ -1,6 +1,6 @@
-package cn.navigational.xplayer.app;
+package cn.navigational.xbrowser.app;
 
-import cn.navigational.xplayer.app.assets.XPlayerResource;
+import cn.navigational.xbrowser.app.assets.XPlayerResource;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

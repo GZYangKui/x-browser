@@ -1,9 +1,8 @@
-package cn.navigational.xplayer.app.assets;
+package cn.navigational.xbrowser.app.assets;
 
 import javafx.scene.image.Image;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;

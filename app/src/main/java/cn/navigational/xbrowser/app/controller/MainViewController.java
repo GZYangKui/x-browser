@@ -1,8 +1,8 @@
-package cn.navigational.xplayer.app.controller;
+package cn.navigational.xbrowser.app.controller;
 
-import cn.navigational.xplayer.app.AbstractWindowController;
-import cn.navigational.xplayer.app.controller.web.AbstractWebPageController;
-import cn.navigational.xplayer.app.controller.web.impl.WebPageController;
+import cn.navigational.xbrowser.app.AbstractWindowController;
+import cn.navigational.xbrowser.app.controller.web.AbstractWebPageController;
+import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;

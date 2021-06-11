@@ -1,6 +1,6 @@
-package cn.navigational.xplayer.kit.util;
+package cn.navigational.xbrowser.kit.util;
 
-import cn.navigational.xplayer.kit.enums.SearchEngine;
+import cn.navigational.xbrowser.kit.enums.SearchEngine;
 
 import java.util.regex.Pattern;
 
@@ -17,7 +17,7 @@ public class URLUtil {
     }
 
 
-    public static String getUrl(SearchEngine engine,String str){
+    public static String getUrl(SearchEngine engine, String str){
         final String url;
         if (isUrl(str)){
             url =  str;

@@ -1,6 +1,6 @@
-package cn.navigational.xplayer.kit;
+package cn.navigational.xbrowser.kit;
 
-import cn.navigational.xplayer.kit.util.StringUtil;
+import cn.navigational.xbrowser.kit.util.StringUtil;
 
 import java.net.URI;
 import java.util.HashMap;
