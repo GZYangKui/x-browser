@@ -1,7 +1,6 @@
 package cn.navigational.xbrowser.app.event;
 
 import cn.navigational.xbrowser.app.controller.MainViewController;
-import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;

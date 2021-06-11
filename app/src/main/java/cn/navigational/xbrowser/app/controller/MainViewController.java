@@ -27,9 +27,17 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
         this.tabPane.getTabs().add(new WebPageController().getTab());
     }
 
+    /**
+     * 监听tab选中事件,动态改变当前窗口标题
+     */
     private ChangeListener<Tab> tabSelectChangeListener() {
         return (observable, oldValue, newValue) -> {
-
+            var controller = newValue.getUserData();
+            if (!(controller instanceof AbstractWebPageController)) {
+                return;
+            }
+            var title = ((AbstractWebPageController) controller).getTitle();
+            this.updateTitle(title, newValue);
         };
     }
 
@@ -52,7 +60,7 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
         if (current != target) {
             return;
         }
-        if (StringUtil.isEmpty(title)){
+        if (StringUtil.isEmpty(title)) {
             title = "x-browser";
         }
         this.getStage().setTitle(title);

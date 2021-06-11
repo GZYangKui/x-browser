@@ -15,7 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import java.util.function.Consumer;
 
 public abstract class AbstractWebPageController implements NavigatorBarController.NavigatorBarService {
     private final Tab tab;
@@ -37,6 +36,7 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
 
         this.tab = new Tab();
         this.tab.setContent(root);
+        this.tab.setUserData(this);
         this.tab.getStyleClass().add("web-tab");
         this.tab.setOnCloseRequest(event -> this.dispose());
     }
@@ -44,6 +44,13 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
 
     public Tab getTab() {
         return tab;
+    }
+
+    /**
+     * 获取当前网页标题
+     */
+    public String getTitle() {
+        return this.engine.getTitle();
     }
 
     @Override
@@ -80,6 +87,8 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
 
     @Override
     public void dispose() {
+        this.tab.setUserData(null);
+        this.engine.getLoadWorker().cancel();
         this.navigatorBarController.dispose();
     }
 }
