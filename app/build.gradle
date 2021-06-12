@@ -13,10 +13,12 @@ if (javafx.platform.classifier == 'linux') applicationDefaultJvmArgs.add("-Djdk.
 
 javafx {
     version = "17-ea+11"
-    modules = [ 'javafx.controls','javafx.fxml','javafx.web' ]
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web','javafx.swing']
 }
 
 dependencies {
     compile project(":kit")
+    //support icon image format
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 

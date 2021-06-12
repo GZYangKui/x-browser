@@ -4,6 +4,8 @@ import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.event.WebEngineEvent;
+import cn.navigational.xbrowser.app.util.ImageUtil;
+import javafx.application.Platform;
 import javafx.concurrent.Worker;
 
 import javafx.scene.control.ProgressIndicator;
@@ -18,14 +20,12 @@ import javafx.scene.web.WebView;
 
 public abstract class AbstractWebPageController implements NavigatorBarController.NavigatorBarService {
     private final Tab tab;
-    private final Image favicon;
     private final WebEngine engine;
     private final NavigatorBarController navigatorBarController;
 
     public AbstractWebPageController() {
         var webView = new WebView();
         this.engine = webView.getEngine();
-        this.favicon = XResource.loadImage("favicon.png");
         this.navigatorBarController = new NavigatorBarController(this);
 
         var root = new BorderPane();
@@ -62,12 +62,28 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     public void state(Worker.State state) {
         var complete = this.navigatorBarController.isComplete(state);
         if (complete) {
-            this.tab.setGraphic(new ImageView(this.favicon));
+            this.loadNetFavicon();
         } else {
             var indicator = new ProgressIndicator();
             indicator.setPrefSize(10, 10);
             this.tab.setGraphic(new ProgressIndicator());
         }
+    }
+
+    /**
+     * 加载网站favicon图标
+     */
+    private void loadNetFavicon() {
+        var optional = this.navigatorBarController.getLocation();
+        if (optional.isEmpty()) {
+            this.tab.setGraphic(new ImageView(ImageUtil.DEFAULT_FAVICON));
+            return;
+        }
+        var str = optional.get().favicon();
+        ImageUtil.loadNetFav(str).thenAccept(image -> {
+            var favicon = new ImageView(image);
+            Platform.runLater(() -> this.tab.setGraphic(favicon));
+        });
     }
 
     @Override

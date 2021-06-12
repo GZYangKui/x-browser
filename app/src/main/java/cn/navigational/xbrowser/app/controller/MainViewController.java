@@ -98,3 +98,4 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
     }
 
 }
+
