@@ -38,8 +38,6 @@ public class ImageUtil {
                     var bufferImage = resize(list.get(0), 20, 20);
                     image = SwingFXUtils.toFXImage(bufferImage, null);
                 }
-                System.out.println(image.getHeight());
-                System.out.println(image.getWidth());
             } catch (IOException e) {
                 e.printStackTrace();
                 LOG.info("ico image decoder happen error:" + e.getMessage());
