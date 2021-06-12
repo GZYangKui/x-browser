@@ -1,3 +1,6 @@
 rootProject.name = 'x-player'
 include 'app'
 include 'kit'
+include 'parser'
+include 'parser'
+

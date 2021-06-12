@@ -1,13 +1,11 @@
 package cn.navigational.xbrowser.kit.util;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**

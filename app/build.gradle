@@ -18,6 +18,7 @@ javafx {
 
 dependencies {
     compile project(":kit")
+    compile project(":parser")
     //support icon image format
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
