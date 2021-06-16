@@ -1,6 +1,5 @@
 package cn.navigational.xbrowser.app.controller.web;
 
-import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.event.WebEngineEvent;
@@ -11,7 +10,6 @@ import javafx.concurrent.Worker;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
@@ -105,6 +103,7 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     public void dispose() {
         this.tab.setUserData(null);
         this.engine.getLoadWorker().cancel();
+        this.engine.load(null);
         this.navigatorBarController.dispose();
     }
 }
