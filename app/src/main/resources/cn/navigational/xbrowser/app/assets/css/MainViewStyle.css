@@ -14,3 +14,14 @@
     -fx-padding: 0;
     -fx-background-color: #dee1e6;
 }
+.bottom-box{
+    -fx-alignment: CENTER-RIGHT;
+}
+.bottom-box .mem-box{
+    -fx-spacing: .3em;
+    -fx-alignment: CENTER;
+}
+.bottom-box .mem-box .button{
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}

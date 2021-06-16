@@ -3,28 +3,47 @@ package cn.navigational.xbrowser.app.controller;
 import cn.navigational.xbrowser.app.AbstractWindowController;
 import cn.navigational.xbrowser.app.controller.web.AbstractWebPageController;
 import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
+import cn.navigational.xbrowser.kit.Closeable;
+import cn.navigational.xbrowser.kit.util.NumberUtil;
 import cn.navigational.xbrowser.kit.util.StringUtil;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /**
  * 主界面视图
  */
-public class MainViewController extends AbstractWindowController<BorderPane> {
+public class MainViewController extends AbstractWindowController<BorderPane> implements Closeable {
     @FXML
     private TabPane tabPane;
+    @FXML
+    private Label memText;
+    @FXML
+    private ProgressBar memBar;
+
+    private final Timer timer;
+    /**
+     * 定时统计内存时间间隔
+     */
+    private static final long CALCULATE_PERIOD = 1000L;
 
     private MainViewController() {
         super("MainView.fxml");
+        this.timer = new Timer();
         this.getStage().setTitle("x-browser");
         this.setSizeByProp(0.7, 0.8);
+        this.timer.schedule(this.calculateMemory(), 0, CALCULATE_PERIOD);
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
         this.tabPane.getTabs().add(new WebPageController().getTab());
         this.tabPane.getTabs().addListener(this.tabListChangeListener());
@@ -87,6 +106,36 @@ public class MainViewController extends AbstractWindowController<BorderPane> {
         this.getStage().setTitle(title);
     }
 
+    /**
+     * 动态统计当前应用内存使用情况
+     */
+    private TimerTask calculateMemory() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                var free = Runtime.getRuntime().freeMemory();
+                var total = Runtime.getRuntime().totalMemory();
+
+                var sTotal = NumberUtil.byteToMB(total);
+                var sUsed = NumberUtil.byteToMB(total - free);
+
+                Platform.runLater(() -> {
+                    MainViewController.this.memBar.setProgress(sUsed / sTotal);
+                    MainViewController.this.memText.setText(sUsed + "MB of " + sTotal + "MB");
+                });
+            }
+        };
+    }
+
+    @FXML
+    private void triGC(){
+        System.gc();
+    }
+
+    @Override
+    public void dispose() {
+        this.timer.cancel();
+    }
 
     private static MainViewController mainViewController;
 

@@ -8,6 +8,8 @@
 
 <?import javafx.scene.web.WebView?>
 <?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="400.0" prefWidth="600.0">
@@ -17,4 +19,22 @@
     <center>
         <TabPane fx:id="tabPane"/>
     </center>
+    <bottom>
+        <HBox styleClass="bottom-box">
+            <HBox styleClass="mem-box">
+                <Button onAction="#triGC">
+                    <tooltip>
+                        <Tooltip text="触发GC"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView>
+                            <Image url="@../img/gc.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <ProgressBar fx:id="memBar"/>
+                <Label fx:id="memText"/>
+            </HBox>
+        </HBox>
+    </bottom>
 </BorderPane>
