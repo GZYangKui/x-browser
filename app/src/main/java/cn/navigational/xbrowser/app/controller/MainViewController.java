@@ -25,6 +25,15 @@ import java.util.TimerTask;
  * 主界面视图
  */
 public class MainViewController extends AbstractWindowController<BorderPane> implements Closeable {
+    /**
+     * 定时统计内存时间间隔
+     */
+    private static final long CALCULATE_PERIOD = 1000L;
+    /**
+     * 内存占用过高显示样式
+     */
+    private static final String MEM_HIGHER_CLASS = "memory-higher";
+
     @FXML
     private TabPane tabPane;
     @FXML
@@ -33,10 +42,6 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
     private ProgressBar memBar;
 
     private final Timer timer;
-    /**
-     * 定时统计内存时间间隔
-     */
-    private static final long CALCULATE_PERIOD = 1000L;
 
     private MainViewController() {
         super("MainView.fxml");
@@ -118,17 +123,24 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
 
                 var sTotal = NumberUtil.byteToMB(total);
                 var sUsed = NumberUtil.byteToMB(total - free);
+                var rate = sUsed / sTotal;
 
                 Platform.runLater(() -> {
-                    MainViewController.this.memBar.setProgress(sUsed / sTotal);
+                    MainViewController.this.memBar.setProgress(rate);
                     MainViewController.this.memText.setText(sUsed + "MB of " + sTotal + "MB");
+                    var high = rate > 0.7 && !memBar.getStyleClass().contains(MEM_HIGHER_CLASS);
+                    if (high) {
+                        memBar.getStyleClass().add(MEM_HIGHER_CLASS);
+                    } else {
+                        memBar.getStyleClass().remove(MEM_HIGHER_CLASS);
+                    }
                 });
             }
         };
     }
 
     @FXML
-    private void triGC(){
+    private void triGC() {
         System.gc();
     }
 

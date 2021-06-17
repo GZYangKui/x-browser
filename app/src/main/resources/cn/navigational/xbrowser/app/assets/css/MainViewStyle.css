@@ -1,4 +1,4 @@
-.bottom-box{
+.bottom-box {
     -fx-padding: .3em;
     -fx-alignment: CENTER;
     -fx-border-color: #dadce0;
@@ -6,22 +6,27 @@
     -fx-border-width: 0.08em 0 0 0;
 }
 
-.progress-indicator .percentage {
-    visibility: hidden !important;
-}
-
-.tab-pane .tab-header-background{
+.tab-pane .tab-header-background {
     -fx-padding: 0;
     -fx-background-color: #dee1e6;
 }
-.bottom-box{
+
+.bottom-box {
     -fx-alignment: CENTER-RIGHT;
 }
-.bottom-box .mem-box{
+
+.bottom-box .mem-box {
     -fx-spacing: .3em;
     -fx-alignment: CENTER;
 }
-.bottom-box .mem-box .button{
+
+.bottom-box .mem-box .button {
     -fx-padding: 0;
     -fx-background-color: transparent;
+}
+
+
+/*内存占用过高,显示红色进度条*/
+.memory-higher .bar {
+    -fx-background-color: red;
 }
