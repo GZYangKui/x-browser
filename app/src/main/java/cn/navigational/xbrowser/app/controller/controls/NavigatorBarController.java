@@ -227,11 +227,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             if (!download) {
                 return;
             }
-            var entries = this.engine.getHistory().getEntries();
-            //关闭tab
-            if (entries.isEmpty()) {
-                this.service.close();
-            }
             PopMessageUtil.showMessage("检测到下载链接!");
         });
     }
@@ -320,13 +315,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
          * 网页加载状态发生改变时回调当前函数
          */
         default void state(Worker.State state) {
-
-        }
-
-        /**
-         * 关闭当前网页
-         */
-        default void close() {
 
         }
 

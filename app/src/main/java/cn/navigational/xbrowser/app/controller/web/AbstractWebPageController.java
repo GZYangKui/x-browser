@@ -100,14 +100,6 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     }
 
     @Override
-    public void close() {
-        Platform.runLater(() -> {
-            this.dispose();
-            this.tab.getTabPane().getTabs().remove(this.tab);
-        });
-    }
-
-    @Override
     public void dispose() {
         this.tab.setUserData(null);
         this.engine.getLoadWorker().cancel();
