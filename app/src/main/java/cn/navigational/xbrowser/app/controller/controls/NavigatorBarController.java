@@ -2,11 +2,13 @@ package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
+import cn.navigational.xbrowser.app.util.PopMessageUtil;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.Location;
+import cn.navigational.xbrowser.kit.downloader.XDownloadHelper;
 import cn.navigational.xbrowser.kit.enums.SearchEngine;
 import cn.navigational.xbrowser.kit.util.StringUtil;
-import cn.navigational.xbrowser.kit.util.URLUtil;
+import cn.navigational.xbrowser.kit.util.LocationUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 
 public class NavigatorBarController extends AbstractFXMLController<HBox> {
@@ -43,7 +46,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
 
     private final NavigatorBarService service;
 
-    private final ChangeListener<String> urlChangeListener = this.urlChangeListener();
 
     private final ChangeListener<Boolean> focusListener = this.textInputFocusListener();
 
@@ -52,6 +54,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private final ChangeListener<Number> indexChangeListener = this.indexChangeListener();
 
     private final ChangeListener<Worker.State> stateChangeListener = this.stateChangeListener();
+
+    private final ChangeListener<String> locationChangeListener = this.locationChangeListener();
 
 
     public NavigatorBarController(NavigatorBarService service) {
@@ -62,7 +66,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.textField.setOnKeyPressed(this::textInputChange);
         this.textField.focusedProperty().addListener(this.focusListener);
         this.engine.titleProperty().addListener(this.titleChangeListener);
-        this.engine.locationProperty().addListener(this.urlChangeListener);
+        this.engine.locationProperty().addListener(this.locationChangeListener);
         this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
         this.engine.getHistory().currentIndexProperty().addListener(this.indexChangeListener);
     }
@@ -150,9 +154,10 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     /**
      * 监听{@link WebEngine#locationProperty()}属性
      */
-    private ChangeListener<String> urlChangeListener() {
+    private ChangeListener<String> locationChangeListener() {
         return (observable, oldValue, newValue) -> {
             this.textField.setText(newValue);
+            this.checkDownload(newValue);
             service.url(newValue);
         };
     }
@@ -192,7 +197,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         if (StringUtil.isEmpty(keyword)) {
             return;
         }
-        this.engine.load(URLUtil.getUrl(this.searchEngine, keyword));
+        this.engine.load(LocationUtil.getUrl(this.searchEngine, keyword));
     }
 
     /**
@@ -210,6 +215,24 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             }
             this.flush.setGraphic(new ImageView(image));
             this.service.state(newValue);
+        });
+    }
+
+    /**
+     * 检查当前连接是否下载连接
+     */
+    private void checkDownload(String location) {
+        var future = CompletableFuture.supplyAsync(() -> XDownloadHelper.checkDownload(location));
+        future.thenAccept(download -> {
+            if (!download) {
+                return;
+            }
+            var entries = this.engine.getHistory().getEntries();
+            //关闭tab
+            if (entries.isEmpty()) {
+                this.service.close();
+            }
+            PopMessageUtil.showMessage("检测到下载链接!");
         });
     }
 
@@ -246,10 +269,9 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
 
     @Override
     public void dispose() {
-        super.dispose();
         this.textField.focusedProperty().removeListener(this.focusListener);
         this.engine.titleProperty().removeListener(this.titleChangeListener);
-        this.engine.locationProperty().removeListener(this.urlChangeListener);
+        this.engine.locationProperty().removeListener(this.locationChangeListener);
         this.engine.getLoadWorker().stateProperty().removeListener(this.stateChangeListener);
         this.engine.getHistory().currentIndexProperty().removeListener(this.indexChangeListener);
     }
@@ -298,6 +320,13 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
          * 网页加载状态发生改变时回调当前函数
          */
         default void state(Worker.State state) {
+
+        }
+
+        /**
+         * 关闭当前网页
+         */
+        default void close() {
 
         }
 

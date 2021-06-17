@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * 封装Http请求工具类
  */
 public class HttpUtil {
+    public static final Integer OK_STATUS_CODE = 200;
     private static final Logger LOGGER = Logger.getLogger(HttpUtil.class.getName());
 
     /**
@@ -22,9 +23,7 @@ public class HttpUtil {
         T result = null;
         try {
             var response = HttpClient.newBuilder().build().send(request, handlers);
-            if (response.statusCode() != 200) {
-                LOGGER.info("HTTP response status exception status code:[" + response.statusCode() + "]");
-            } else {
+            if (response.statusCode() == OK_STATUS_CODE) {
                 result = response.body();
             }
         } catch (IOException | InterruptedException e) {

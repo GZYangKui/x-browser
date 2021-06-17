@@ -21,5 +21,6 @@ dependencies {
     compile project(":parser")
     //support icon image format
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.1.0'
 }
 
