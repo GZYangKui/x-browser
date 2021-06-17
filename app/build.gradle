@@ -8,7 +8,7 @@ version '1.0-SNAPSHOT'
 mainClassName = 'cn.navigational.xbrowser.app.XBrowser'
 
 //jvm args
-applicationDefaultJvmArgs = ['-Dsun.java2d.opengl=true', '-XX:+UseZGC', '-Xms512M', '-Xmx1024M']
+applicationDefaultJvmArgs = ['-Dsun.java2d.opengl=true', '-XX:+UseZGC', '-Xms128M', '-Xmx512M']
 if (javafx.platform.classifier == 'linux') applicationDefaultJvmArgs.add("-Djdk.gtk.version=2")
 
 javafx {
