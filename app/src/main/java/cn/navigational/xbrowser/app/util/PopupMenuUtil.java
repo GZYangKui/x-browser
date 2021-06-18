@@ -8,7 +8,7 @@ public class PopupMenuUtil {
      * 设置浏览器User-Agent
      */
     public static void setUserAgent(WebEngine engine) {
-        var dialog = new TextAreaDialog();
+        var dialog = new TextAreaDialog(engine.getUserAgent());
         dialog.setTitle("User-Agent");
         dialog.setHeaderText("请输入正确User-Agent格式,否则网络可能无法请求.");
         dialog.showAndWait().ifPresent(engine::setUserAgent);

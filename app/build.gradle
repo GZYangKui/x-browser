@@ -11,6 +11,17 @@ mainClassName = 'cn.navigational.xbrowser.app.XBrowser'
 applicationDefaultJvmArgs = ['-Dsun.java2d.opengl=true', '-XX:+UseZGC', '-Xms128M', '-Xmx512M']
 if (javafx.platform.classifier == 'linux') applicationDefaultJvmArgs.add("-Djdk.gtk.version=2")
 
+jar{
+    from {
+        //添加依懒到打包文件
+        configurations.runtime.collect { zipTree(it) }
+    }
+    manifest {
+        attributes 'Multi-Release': true
+        attributes "Manifest-Version": 1.0
+        attributes 'Main-Class': mainClassName
+    }
+}
 javafx {
     version = "16"
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']

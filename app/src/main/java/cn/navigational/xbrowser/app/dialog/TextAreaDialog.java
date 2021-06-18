@@ -18,6 +18,11 @@ public class TextAreaDialog extends Dialog<String> {
 
     }
 
+    public TextAreaDialog(String text){
+        this();
+        this.textArea.setText(text);
+    }
+
     /**
      * 处理用户点击确定/取消以及X-WINDOW处理逻辑
      */
@@ -29,5 +34,4 @@ public class TextAreaDialog extends Dialog<String> {
             return this.textArea.getText();
         };
     }
-
 }
