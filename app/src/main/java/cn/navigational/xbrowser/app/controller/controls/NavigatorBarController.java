@@ -2,6 +2,7 @@ package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
+import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.util.PopMessageUtil;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.Location;
@@ -30,6 +31,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     @FXML
     private Button go;
     @FXML
+    private Button func;
+    @FXML
     private Button back;
     @FXML
     private Button flush;
@@ -45,6 +48,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private SearchEngine searchEngine;
 
     private final NavigatorBarService service;
+
+    private final PopupMenuController popupMenuController;
 
 
     private final ChangeListener<Boolean> focusListener = this.textInputFocusListener();
@@ -63,7 +68,9 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.service = service;
         this.engine = service.getWebEngine();
         this.switchEngine(SearchEngine.BAIDU);
+        this.popupMenuController = new PopupMenuController();
         this.textField.setOnKeyPressed(this::textInputChange);
+        this.func.setOnAction(event -> this.popupMenuController.show());
         this.textField.focusedProperty().addListener(this.focusListener);
         this.engine.titleProperty().addListener(this.titleChangeListener);
         this.engine.locationProperty().addListener(this.locationChangeListener);

@@ -2,6 +2,7 @@ package cn.navigational.xbrowser.app.controller.web;
 
 import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
+import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.event.WebEngineEvent;
 import cn.navigational.xbrowser.app.util.ImageUtil;
 import javafx.application.Platform;
