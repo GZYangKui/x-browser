@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.web.*;
+import org.controlsfx.dialog.ExceptionDialog;
 
 import java.util.Optional;
 
@@ -60,7 +61,9 @@ public class WebEngineEvent {
     }
 
     private void onError(WebErrorEvent event) {
-        event.getException().printStackTrace();
+        var dialog = new ExceptionDialog(event.getException());
+        dialog.setTitle("~~~发生错误了~~~~");
+        dialog.showAndWait();
     }
 
 

@@ -68,8 +68,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.service = service;
         this.engine = service.getWebEngine();
         this.switchEngine(SearchEngine.BAIDU);
-        this.popupMenuController = new PopupMenuController();
         this.textField.setOnKeyPressed(this::textInputChange);
+        this.popupMenuController = new PopupMenuController(service);
         this.func.setOnAction(event -> this.popupMenuController.show());
         this.textField.focusedProperty().addListener(this.focusListener);
         this.engine.titleProperty().addListener(this.titleChangeListener);

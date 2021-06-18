@@ -3,6 +3,9 @@ package cn.navigational.xbrowser.app.control.skin;
 import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.app.control.PopupMenu;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -16,7 +19,6 @@ public class PopupMenuSkin implements Skin<PopupMenu> {
 
     private final GridPane gridPane;
     private final PopupMenu popupMenu;
-
     private static final String POPUP_STYLE = XResource.class.getResource("css/controls/PopupMenuStyle.css").toExternalForm();
 
 
@@ -27,11 +29,14 @@ public class PopupMenuSkin implements Skin<PopupMenu> {
         this.gridPane.getStylesheets().add(POPUP_STYLE);
         for (PopupMenu.PopupMenuAction value : PopupMenu.PopupMenuAction.values()) {
             var button = new Button(value.getTitle());
-            var image = XResource.loadImage("menu/" + value.getIcon());
-            button.setGraphic(new ImageView(image));
+
             button.setContentDisplay(ContentDisplay.TOP);
+            button.setOnAction(event -> this.popupMenu._action(value));
+            button.setGraphic(new ImageView(XResource.loadImage("menu/" + value.getIcon())));
+
             this.gridPane.add(button,value.getColumn(),value.getRow());
         }
+
     }
 
     @Override
