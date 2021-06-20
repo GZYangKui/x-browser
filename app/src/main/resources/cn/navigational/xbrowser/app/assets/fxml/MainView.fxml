@@ -22,7 +22,7 @@
     <bottom>
         <HBox styleClass="bottom-box">
             <HBox styleClass="mem-box">
-                <Button onAction="#triGC">
+                <Button onAction="#triGC" fx:id="triggerGC">
                     <tooltip>
                         <Tooltip text="触发GC"/>
                     </tooltip>

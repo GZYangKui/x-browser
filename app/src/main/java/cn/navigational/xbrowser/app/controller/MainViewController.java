@@ -10,10 +10,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.Cursor;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 
@@ -39,7 +37,10 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
     @FXML
     private Label memText;
     @FXML
+    private Button triggerGC;
+    @FXML
     private ProgressBar memBar;
+
 
     private final Timer timer;
 
@@ -48,10 +49,11 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         this.timer = new Timer();
         this.getStage().setTitle("x-browser");
         this.setSizeByProp(0.7, 0.8);
+        this.triggerGC.setCursor(Cursor.HAND);
         this.timer.schedule(this.calculateMemory(), 0, CALCULATE_PERIOD);
-        this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
         this.tabPane.getTabs().add(new WebPageController().getTab());
         this.tabPane.getTabs().addListener(this.tabListChangeListener());
+        this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
     }
 
     /**
