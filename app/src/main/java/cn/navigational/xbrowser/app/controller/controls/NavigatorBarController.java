@@ -15,6 +15,8 @@ import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,7 +42,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     @FXML
     private HBox inputBox;
     @FXML
-    private Button sEngine;
+    private MenuButton sEngine;
     @FXML
     private TextField textField;
 
@@ -51,7 +53,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private final NavigatorBarService service;
 
     private final PopupMenuController popupMenuController;
-
 
     private final ChangeListener<Boolean> focusListener = this.textInputFocusListener();
 
@@ -66,9 +67,9 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
 
     public NavigatorBarController(NavigatorBarService service) {
         super("controls/NavigatorBar.fxml");
+        this.initSEngine();
         this.service = service;
         this.engine = service.getWebEngine();
-        this.switchEngine(SearchEngine.BAIDU);
         this.func.setOnMouseClicked(this::openFuncPopup);
         this.textField.setOnKeyPressed(this::textInputChange);
         this.popupMenuController = new PopupMenuController(service);
@@ -77,6 +78,29 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.engine.locationProperty().addListener(this.locationChangeListener);
         this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
         this.engine.getHistory().currentIndexProperty().addListener(this.indexChangeListener);
+
+    }
+
+    /**
+     * 初始化搜索引擎选项
+     */
+    private void initSEngine() {
+        for (SearchEngine value : SearchEngine.values()) {
+            var item = new MenuItem();
+            item.setText(value.getTitle());
+            item.setOnAction(event -> this.switchEngine(value));
+            item.setGraphic(new ImageView(getSEngineIcon(value)));
+            this.sEngine.getItems().add(item);
+        }
+        this.switchEngine(SearchEngine.BAIDU);
+    }
+
+    /**
+     * 切换搜索引擎
+     */
+    private void switchEngine(SearchEngine engine) {
+        this.searchEngine = engine;
+        this.sEngine.setGraphic(new ImageView(getSEngineIcon(engine)));
     }
 
     /**
@@ -84,7 +108,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
      */
     private void openFuncPopup(MouseEvent event) {
         var x = event.getScreenX();
-        var y = event.getScreenY() + 10;
+        var y = event.getScreenY() + 20;
         this.popupMenuController.show(x, y);
     }
 
@@ -92,11 +116,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     private int getCurrentIndex() {
         var history = engine.getHistory();
         return history.getCurrentIndex();
-    }
-
-    private void switchEngine(SearchEngine engine) {
-        this.searchEngine = engine;
-        this.sEngine.setGraphic(new ImageView(getSEngineIcon(engine)));
     }
 
     /**
