@@ -5,10 +5,7 @@ import cn.navigational.xbrowser.app.control.PopupMenu;
 import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.util.PopupMenuUtil;
-import com.sun.tools.javac.Main;
 import javafx.application.Platform;
-import javafx.stage.Window;
-import org.w3c.dom.Node;
 
 
 /**
@@ -36,6 +33,9 @@ public class PopupMenuController {
         }
     }
 
+    /**
+     * 动态调整当前菜单显示位置
+     */
     public void show(double x, double y) {
         var window = MainViewController.getInstance().getStage();
         var width = window.getWidth();
@@ -44,6 +44,6 @@ public class PopupMenuController {
         if (width + x > xb) {
             x = xb - this.popupMenu.getWidth();
         }
-        this.popupMenu.show(MainViewController.getInstance().getStage(), x, y);
+        this.popupMenu.show(window, x, y);
     }
 }
