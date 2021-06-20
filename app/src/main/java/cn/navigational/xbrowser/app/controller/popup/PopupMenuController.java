@@ -7,6 +7,7 @@ import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.util.PopupMenuUtil;
 import javafx.application.Platform;
 import javafx.stage.Window;
+import org.w3c.dom.Node;
 
 
 /**
@@ -34,21 +35,7 @@ public class PopupMenuController {
         }
     }
 
-    public void show() {
-        var window = MainViewController.getInstance().getStage();
-        //设置居中显示
-        this.popupMenu.show(window, getAnchorX(window), getAnchorY(window));
-    }
-
-    private double getAnchorY(Window window) {
-        var y = window.getY();
-        return y + window.getHeight() * 0.8;
-    }
-
-    private double getAnchorX(Window window) {
-        var x = window.getX();
-        var w = window.getWidth();
-        var w1 = this.popupMenu.getWidth();
-        return x + ((w - w1) / 2);
+    public void show(double x, double y) {
+        this.popupMenu.show(MainViewController.getInstance().getStage(), x, y);
     }
 }

@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
@@ -68,14 +69,23 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.service = service;
         this.engine = service.getWebEngine();
         this.switchEngine(SearchEngine.BAIDU);
+        this.func.setOnMouseClicked(this::openFuncPopup);
         this.textField.setOnKeyPressed(this::textInputChange);
         this.popupMenuController = new PopupMenuController(service);
-        this.func.setOnAction(event -> this.popupMenuController.show());
         this.textField.focusedProperty().addListener(this.focusListener);
         this.engine.titleProperty().addListener(this.titleChangeListener);
         this.engine.locationProperty().addListener(this.locationChangeListener);
         this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
         this.engine.getHistory().currentIndexProperty().addListener(this.indexChangeListener);
+    }
+
+    /**
+     * 获取当前鼠标点击位置显示{@link cn.navigational.xbrowser.app.control.PopupMenu}
+     */
+    private void openFuncPopup(MouseEvent event) {
+        var x = event.getScreenX();
+        var y = event.getScreenY() + 10;
+        this.popupMenuController.show(x, y);
     }
 
 
