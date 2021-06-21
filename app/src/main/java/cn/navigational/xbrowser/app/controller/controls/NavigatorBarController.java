@@ -158,7 +158,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             return;
         }
         var state = this.engine.getLoadWorker().getState();
-        if (state == Worker.State.CANCELLED || state == Worker.State.SUCCEEDED || state == Worker.State.FAILED) {
+        if (isComplete(state)) {
             engine.reload();
         } else {
             this.engine.getLoadWorker().cancel();
