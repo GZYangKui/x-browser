@@ -249,6 +249,7 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
                 //显示中断
                 image = XResource.loadImage("cancel.png");
             }
+            this.engine.executeScript("document.body.bgColor='#cccccc';");
             this.flush.setGraphic(new ImageView(image));
             this.service.state(newValue);
         });

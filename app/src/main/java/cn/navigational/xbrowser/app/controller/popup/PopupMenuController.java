@@ -31,6 +31,9 @@ public class PopupMenuController {
         if (action == PopupMenu.PopupMenuAction.BROWSER_UA) {
             PopupMenuUtil.setUserAgent(this.service.getWebEngine());
         }
+        if (action == PopupMenu.PopupMenuAction.PROTECT_EYE){
+            PopupMenuUtil.setEyeColor(this.service.getWebEngine());
+        }
     }
 
     /**

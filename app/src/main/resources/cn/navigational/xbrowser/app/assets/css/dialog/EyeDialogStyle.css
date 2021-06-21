@@ -1,0 +1,18 @@
+.grid-pane {
+    -fx-hgap: 1em;
+    -fx-vgap: 1em;
+    -fx-padding: .3em;
+    -fx-background-color: #fff;
+}
+
+.color-box {
+    -fx-spacing: .3em;
+    -fx-alignment: CENTER;
+    -fx-border-color: #fff;
+    -fx-border-width: .1em;
+}
+
+.select-box {
+    -fx-border-color: red;
+    -fx-border-width: .1em;
+}
