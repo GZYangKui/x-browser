@@ -5,6 +5,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,8 +26,10 @@ public class EyeColorDialog extends Dialog<EyeColorDialog.Colors> {
     public EyeColorDialog() {
         this.color = Colors.ZERO;
         this.init();
+        this.getDialogPane().requestFocus();
         this.getDialogPane().getStylesheets().add(STYLE_SHEETS);
         this.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
         this.setResultConverter((btn)->{
             if (btn == null || btn == ButtonType.CANCEL){
                 return Colors.ZERO;

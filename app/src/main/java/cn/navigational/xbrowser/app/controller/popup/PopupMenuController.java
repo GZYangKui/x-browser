@@ -34,6 +34,9 @@ public class PopupMenuController {
         if (action == PopupMenu.PopupMenuAction.PROTECT_EYE){
             PopupMenuUtil.setEyeColor(this.service.getWebEngine());
         }
+        if (action == PopupMenu.PopupMenuAction.VIEW_SOURCE){
+            PopupMenuUtil.viewSource(this.service.getWebEngine());
+        }
     }
 
     /**
