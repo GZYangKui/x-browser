@@ -54,6 +54,6 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
      * 当前窗口关闭时调用当前函数
      */
     protected void onCloseRequest(WindowEvent event) {
-
+        this.dispose();
     }
 }

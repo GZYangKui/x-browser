@@ -3,6 +3,7 @@ package cn.navigational.xbrowser.app.controller.popup;
 
 import cn.navigational.xbrowser.app.control.PopupMenu;
 import cn.navigational.xbrowser.app.controller.MainViewController;
+import cn.navigational.xbrowser.app.controller.WebSourceCodeViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.util.PopupMenuUtil;
 import javafx.application.Platform;
@@ -35,7 +36,7 @@ public class PopupMenuController {
             PopupMenuUtil.setEyeColor(this.service.getWebEngine());
         }
         if (action == PopupMenu.PopupMenuAction.VIEW_SOURCE){
-            PopupMenuUtil.viewSource(this.service.getWebEngine());
+            WebSourceCodeViewController.tryNewController(this.service);
         }
     }
 

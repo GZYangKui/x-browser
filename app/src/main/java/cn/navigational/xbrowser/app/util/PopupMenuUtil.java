@@ -2,7 +2,6 @@ package cn.navigational.xbrowser.app.util;
 
 import cn.navigational.xbrowser.app.dialog.EyeColorDialog;
 import cn.navigational.xbrowser.app.dialog.TextAreaDialog;
-import cn.navigational.xbrowser.app.dialog.WebCodeDialog;
 import javafx.scene.web.WebEngine;
 
 public class PopupMenuUtil {
@@ -23,11 +22,5 @@ public class PopupMenuUtil {
             //todo 改变网页背景色
 
         }
-    }
-
-    public static void viewSource(WebEngine engine){
-        var dialog = new WebCodeDialog(engine);
-
-        dialog.showAndWait();
     }
 }

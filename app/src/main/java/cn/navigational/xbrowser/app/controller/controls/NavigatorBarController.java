@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -353,6 +354,11 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         default void state(Worker.State state) {
 
         }
+
+        /**
+         * NavigationBar唯一标识
+         */
+        String uuid();
 
         /**
          * 获取{@link WebEngine}实例对象

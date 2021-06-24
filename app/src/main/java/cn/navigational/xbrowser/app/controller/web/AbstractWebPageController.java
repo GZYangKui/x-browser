@@ -1,6 +1,7 @@
 package cn.navigational.xbrowser.app.controller.web;
 
 import cn.navigational.xbrowser.app.controller.MainViewController;
+import cn.navigational.xbrowser.app.controller.WebSourceCodeViewController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.event.WebEngineEvent;
@@ -16,15 +17,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.util.UUID;
+
 
 public abstract class AbstractWebPageController implements NavigatorBarController.NavigatorBarService {
     private final Tab tab;
+    private final String uuid;
     private final WebEngine engine;
     private final NavigatorBarController navigatorBarController;
 
     public AbstractWebPageController() {
         var webView = new WebView();
         this.engine = webView.getEngine();
+        this.uuid = UUID.randomUUID().toString();
         this.navigatorBarController = new NavigatorBarController(this);
 
         var root = new BorderPane();
@@ -101,10 +106,17 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
     }
 
     @Override
+    public String uuid() {
+        return this.uuid;
+    }
+
+    @Override
     public void dispose() {
         this.tab.setUserData(null);
         this.engine.getLoadWorker().cancel();
         this.engine.load(null);
         this.navigatorBarController.dispose();
+        //尝试关闭对应的源码视图页面
+        WebSourceCodeViewController.tryCloseController(this.uuid);
     }
 }
