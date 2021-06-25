@@ -2,6 +2,7 @@ package cn.navigational.xbrowser.app.controller;
 
 import cn.navigational.xbrowser.app.AbstractWindowController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
+import cn.navigational.xbrowser.kit.util.XMLUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
