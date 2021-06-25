@@ -21,7 +21,7 @@ public class WebSourceCodeViewController extends AbstractWindowController<Border
 
     private final NavigatorBarController.NavigatorBarService service;
 
-    private final ChangeListener<String> locationListener = ((observable, oldValue, newValue) ->this.setTitle(newValue));
+    private final ChangeListener<String> locationListener = ((observable, oldValue, newValue) -> this.setTitle(newValue));
 
     private final ChangeListener<Document> documentListener = (observable, oldValue, newValue) -> this.initHtmlDocument(newValue);
 
@@ -30,23 +30,27 @@ public class WebSourceCodeViewController extends AbstractWindowController<Border
         this.service = service;
         this.setSizeByProp(0.8, 0.8);
         this.initHtmlDocument(this.service.getWebEngine().getDocument());
-        this.getStage().setTitle("Dev-Tools - "+service.getWebEngine().getLocation());
+        this.getStage().setTitle("Dev-Tools - " + service.getWebEngine().getLocation());
         this.service.getWebEngine().documentProperty().addListener(this.documentListener);
         this.service.getWebEngine().locationProperty().addListener(this.locationListener);
     }
 
-    private void initHtmlDocument(Document document){
-        if (document == null){
+    /**
+     * 获取html文档并显示到{@link TextArea}上
+     */
+    private void initHtmlDocument(Document document) {
+        if (document == null) {
             this.textArea.setText(null);
             return;
         }
-        //todo
-
+        var html = (String) service
+                .getWebEngine().executeScript("document.documentElement.outerHTML");
+        this.textArea.setText(html);
     }
 
 
-    private void setTitle(String location){
-        this.getStage().setTitle("DevTools - "+location);
+    private void setTitle(String location) {
+        this.getStage().setTitle("DevTools - " + location);
     }
 
     @Override

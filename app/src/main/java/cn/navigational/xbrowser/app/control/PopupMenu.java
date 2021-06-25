@@ -39,7 +39,7 @@ public class PopupMenu extends PopupControl {
         TAG(0, 0, "tag.png", "书签"),
         HISTORY(0, 1, "history.png", "历史"),
         PROTECT_EYE(0, 2, "eye.png", "护眼"),
-        VIEW_SOURCE(0, 3, "code.png", "源码"),
+        VIEW_SOURCE(0, 3, "debug.png", "调试"),
         BROWSER_UA(0, 4, "ua.png", "UA"),
         COLLECT(1, 0, "collect.png", "收藏"),
         DOWNLOAD(1, 1, "download.png", "下载"),
