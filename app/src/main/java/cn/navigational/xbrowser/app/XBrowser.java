@@ -1,6 +1,7 @@
 package cn.navigational.xbrowser.app;
 
 import cn.navigational.xbrowser.app.controller.MainViewController;
+import cn.navigational.xbrowser.kit.Closeable;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -16,6 +17,6 @@ public class XBrowser extends Application {
 
     @Override
     public void stop() throws Exception {
-        MainViewController.getInstance().dispose();
+        Closeable.tryClose(MainViewController.getInstance());
     }
 }

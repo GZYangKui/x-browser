@@ -14,6 +14,10 @@
     -fx-border-color: transparent;
 }
 
+.web-tab:selected .tab-close-button:hover{
+    -fx-background-color: red;
+}
+
 .web-tab .tab-label {
     -fx-pref-width: 17em;
     -fx-text-alignment: LEFT;
