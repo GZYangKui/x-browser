@@ -3,8 +3,11 @@ package cn.navigational.xbrowser.app.controller;
 import cn.navigational.xbrowser.app.AbstractWindowController;
 import cn.navigational.xbrowser.app.controller.controls.NavigatorBarController;
 import javafx.beans.value.ChangeListener;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.WindowEvent;
+import org.w3c.dom.Document;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,19 +16,37 @@ import java.util.concurrent.ConcurrentHashMap;
  * Web站点源码查看窗口
  */
 public class WebSourceCodeViewController extends AbstractWindowController<BorderPane> {
+    @FXML
+    private TextArea textArea;
 
     private final NavigatorBarController.NavigatorBarService service;
 
-    private final ChangeListener<String> locationListener = ((observable, oldValue, newValue) -> {
-        this.getStage().setTitle("DevTools - "+newValue);
-    });
+    private final ChangeListener<String> locationListener = ((observable, oldValue, newValue) ->this.setTitle(newValue));
+
+    private final ChangeListener<Document> documentListener = (observable, oldValue, newValue) -> this.initHtmlDocument(newValue);
 
     private WebSourceCodeViewController(NavigatorBarController.NavigatorBarService service) {
         super("WebSourceCodeView.fxml");
         this.service = service;
         this.setSizeByProp(0.8, 0.8);
+        this.initHtmlDocument(this.service.getWebEngine().getDocument());
         this.getStage().setTitle("Dev-Tools - "+service.getWebEngine().getLocation());
+        this.service.getWebEngine().documentProperty().addListener(this.documentListener);
         this.service.getWebEngine().locationProperty().addListener(this.locationListener);
+    }
+
+    private void initHtmlDocument(Document document){
+        if (document == null){
+            this.textArea.setText(null);
+            return;
+        }
+        //todo
+
+    }
+
+
+    private void setTitle(String location){
+        this.getStage().setTitle("DevTools - "+location);
     }
 
     @Override
@@ -37,6 +58,7 @@ public class WebSourceCodeViewController extends AbstractWindowController<Border
     @Override
     public void dispose() {
         this.service.getWebEngine().locationProperty().removeListener(this.locationListener);
+        this.service.getWebEngine().documentProperty().removeListener(this.documentListener);
     }
 
     private static final Map<String, WebSourceCodeViewController> CONTROLLERS = new ConcurrentHashMap<>();

@@ -8,5 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
-
+    <center>
+        <TextArea fx:id="textArea"/>
+    </center>
 </BorderPane>
