@@ -84,8 +84,11 @@ public abstract class AbstractWebPageController implements NavigatorBarControlle
             return;
         }
         var str = optional.get().favicon();
-        ImageUtil.loadNetFav(str).thenAccept(image -> {
-            var favicon = new ImageView(image);
+        ImageUtil.loadNetFav(str).whenComplete((rs, t) -> {
+            if (t != null) {
+                rs = ImageUtil.DEFAULT_FAVICON;
+            }
+            var favicon = new ImageView(rs);
             Platform.runLater(() -> this.tab.setGraphic(favicon));
         });
     }

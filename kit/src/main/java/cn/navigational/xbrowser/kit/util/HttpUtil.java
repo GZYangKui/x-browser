@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -19,7 +20,11 @@ public class HttpUtil {
      * 发起get请求
      */
     public static <T> Optional<T> doGet(String url, HttpResponse.BodyHandler<T> handlers) {
-        var request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        var request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
         T result = null;
         try {
             var response = HttpClient.newBuilder().build().send(request, handlers);
