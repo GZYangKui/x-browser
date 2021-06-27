@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>x-browser</title>
-    <style type="text/css">
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -58,6 +58,7 @@
 
         form {
             position: relative;
+            margin: 0;
         }
 
         form span {
@@ -89,18 +90,13 @@
             background-color: #4662d9;
         }
     </style>
-    <script>
-        function search(){
-            let kw = document.getElementById("kw");
-            window.xBrowser.jsSearch(kw.value);
-        }
-    </script>
+    <script src="../js/index.js"></script>
 </head>
 
 <body>
 <div class="top-box">
     <div class="search-box">
-        <form>
+        <form onsubmit="return false;">
             <span>
                 <input id="kw"/>
             </span>
