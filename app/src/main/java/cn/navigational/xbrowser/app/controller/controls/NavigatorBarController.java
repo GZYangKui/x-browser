@@ -4,6 +4,7 @@ import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
 import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.util.PopMessageUtil;
+import cn.navigational.xbrowser.app.util.WebEngineUtil;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.Location;
 import cn.navigational.xbrowser.kit.downloader.XDownloadHelper;
@@ -238,6 +239,16 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
     }
 
     /**
+     * js中调用java搜索
+     */
+    public void jsSearch(String keyword) {
+        if (StringUtil.isEmpty(keyword)){
+            return;
+        }
+        this.engine.load(LocationUtil.getUrl(this.searchEngine, keyword));
+    }
+
+    /**
      * 监听{@link WebEngine}加载状态
      */
     private ChangeListener<Worker.State> stateChangeListener() {
@@ -246,6 +257,8 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
             //显示刷新图标
             if (isComplete(newValue)) {
                 image = XResource.loadImage("flush.png");
+                //将当前对象设置为js window对象的成员之一
+                WebEngineUtil.setMember(service.getWebEngine(), this);
             } else {
                 //显示中断
                 image = XResource.loadImage("cancel.png");
