@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,15 +33,18 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
      */
     private static final String MEM_HIGHER_CLASS = "memory-higher";
 
-    @FXML
-    private TabPane tabPane;
+    private static final String COPYRIGHT_PATTERN = "©2020-%s x-browser. All Rights Reserved. navigational.cn";
+
     @FXML
     private Label memText;
+    @FXML
+    private Label copyright;
+    @FXML
+    private TabPane tabPane;
     @FXML
     private Button triggerGC;
     @FXML
     private ProgressBar memBar;
-
 
     private final Timer timer;
 
@@ -48,12 +52,18 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         super("MainView.fxml");
         this.timer = new Timer();
         this.getStage().setTitle("x-browser");
+        this.copyright.setText(this.copyright());
         this.setSizeByProp(0.7, 0.8);
         this.triggerGC.setCursor(Cursor.HAND);
         this.timer.schedule(this.calculateMemory(), 0, CALCULATE_PERIOD);
         this.tabPane.getTabs().add(new WebPageController().getTab());
         this.tabPane.getTabs().addListener(this.tabListChangeListener());
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
+    }
+
+    private String copyright(){
+        var calender = Calendar.getInstance();
+        return String.format(COPYRIGHT_PATTERN,calender.get(Calendar.YEAR));
     }
 
     /**

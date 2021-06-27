@@ -11,12 +11,16 @@
     -fx-background-color: #dee1e6;
 }
 
-.bottom-box {
-    -fx-alignment: CENTER-RIGHT;
+.bottom-box{
+    -fx-padding: .2em .5em;
+}
+
+.bottom-box HBox {
+    -fx-spacing: .3em;
+    -fx-alignment: CENTER-LEFT;
 }
 
 .bottom-box .mem-box {
-    -fx-spacing: .3em;
     -fx-alignment: CENTER;
 }
 
