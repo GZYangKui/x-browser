@@ -2,7 +2,6 @@ package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
-import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.util.PopMessageUtil;
 import cn.navigational.xbrowser.app.util.WebEngineUtil;
@@ -29,7 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -81,7 +79,6 @@ public class NavigatorBarController extends AbstractFXMLController<HBox> {
         this.engine.locationProperty().addListener(this.locationChangeListener);
         this.engine.getLoadWorker().stateProperty().addListener(this.stateChangeListener);
         this.engine.getHistory().currentIndexProperty().addListener(this.indexChangeListener);
-
     }
 
     /**
