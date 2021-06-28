@@ -51,6 +51,14 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
     }
 
     /**
+     * 重新设置窗口大小
+     */
+    public void resizeTo(double width, double height) {
+        this.stage.setWidth(width);
+        this.stage.setHeight(height);
+    }
+
+    /**
      * 当前窗口关闭时调用当前函数
      */
     protected void onCloseRequest(WindowEvent event) {

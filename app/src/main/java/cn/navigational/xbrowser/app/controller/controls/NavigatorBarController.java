@@ -2,6 +2,7 @@ package cn.navigational.xbrowser.app.controller.controls;
 
 import cn.navigational.xbrowser.app.AbstractFXMLController;
 import cn.navigational.xbrowser.app.assets.XResource;
+import cn.navigational.xbrowser.app.controller.MainViewController;
 import cn.navigational.xbrowser.app.controller.popup.PopupMenuController;
 import cn.navigational.xbrowser.app.util.PopMessageUtil;
 import cn.navigational.xbrowser.app.util.WebEngineUtil;

@@ -1,6 +1,7 @@
 package cn.navigational.xbrowser.app.event;
 
 import cn.navigational.xbrowser.app.controller.MainViewController;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
@@ -17,9 +18,9 @@ public class WebEngineEvent {
 
     private WebEngineEvent(WebEngine engine) {
         this.engine = engine;
-
         this.engine.setOnAlert(this::onAlert);
         this.engine.setOnError(this::onError);
+        this.engine.setOnResized(this::resize);
         this.engine.setPromptHandler(this::prompt);
         this.engine.setConfirmHandler(this::confirm);
         this.engine.setCreatePopupHandler(param -> MainViewController.getInstance().createPopupWindow());
@@ -66,9 +67,22 @@ public class WebEngineEvent {
         dialog.showAndWait();
     }
 
+    /**
+     * <code>
+     * window.resizeTo(width,height)
+     * </code>
+     */
+    private void resize(WebEvent<Rectangle2D> event) {
+        var rect = event.getData();
+        var width = rect.getWidth();
+        var height = rect.getHeight();
+        MainViewController
+                .getInstance().resizeTo(width, height);
+    }
 
-    public static WebEngineEvent create(WebEngine engine) {
-        return new WebEngineEvent(engine);
+
+    public static void create(WebEngine engine) {
+        new WebEngineEvent(engine);
     }
 
 }
