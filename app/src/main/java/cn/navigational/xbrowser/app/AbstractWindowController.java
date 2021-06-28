@@ -20,7 +20,7 @@ public class AbstractWindowController<T extends Parent> extends AbstractFXMLCont
         this.stage.setScene(this.scene);
         this.stage.setOnCloseRequest(this::onCloseRequest);
         this.scene.getStylesheets().add(XResource.APP_STYLE);
-        this.stage.getIcons().add(XResource.loadImage("icon.png"));
+        this.stage.getIcons().add(XResource.loadImage("logo.png"));
     }
 
     public Scene getScene() {
