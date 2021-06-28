@@ -26,8 +26,13 @@
         }
 
         .search-box {
-            margin-top: 130px;
+            margin-top: 50px;
             display: inline-block;
+        }
+
+        .search-box .logo-box img{
+            width: 270px;
+            height: 129px;
         }
 
         .s_btn {
@@ -86,7 +91,8 @@
             border-color: #4e6ef2 !important;
             opacity: 1;
         }
-        .s_btn:hover{
+
+        .s_btn:hover {
             background-color: #4662d9;
         }
     </style>
@@ -96,14 +102,19 @@
 <body>
 <div class="top-box">
     <div class="search-box">
-        <form onsubmit="return false;">
+        <div class="logo-box">
+            <img src="../img/100_icon.png" alt="">
+        </div>
+        <div>
+            <form onsubmit="return false;">
             <span>
                 <input id="kw"/>
             </span>
-            <span>
+                <span>
                 <input class="s_btn" type="button" onclick="search()" value="搜索一下"/>
             </span>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 <div class="copyright">
