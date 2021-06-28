@@ -22,9 +22,7 @@
     </center>
     <bottom>
         <HBox styleClass="bottom-box">
-            <HBox HBox.hgrow="ALWAYS">
-                <Label fx:id="copyright"/>
-            </HBox>
+            <HBox HBox.hgrow="ALWAYS"/>
             <HBox styleClass="mem-box">
                 <Button onAction="#triGC" fx:id="triggerGC">
                     <tooltip>
