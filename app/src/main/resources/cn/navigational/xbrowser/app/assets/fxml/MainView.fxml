@@ -17,7 +17,9 @@
     </center>
     <bottom>
         <HBox styleClass="bottom-box">
-            <HBox HBox.hgrow="ALWAYS"/>
+            <HBox HBox.hgrow="ALWAYS">
+                <Label fx:id="fpsLabel"/>
+            </HBox>
             <HBox styleClass="mem-box">
                 <Button onAction="#triGC" fx:id="triggerGC">
                     <tooltip>

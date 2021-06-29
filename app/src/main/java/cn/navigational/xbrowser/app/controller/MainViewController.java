@@ -6,6 +6,7 @@ import cn.navigational.xbrowser.app.controller.web.impl.WebPageController;
 import cn.navigational.xbrowser.kit.Closeable;
 import cn.navigational.xbrowser.kit.util.NumberUtil;
 import cn.navigational.xbrowser.kit.util.StringUtil;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -14,6 +15,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
+import jdk.jfr.consumer.EventStream;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -34,6 +36,8 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
     private static final String MEM_HIGHER_CLASS = "memory-higher";
 
     @FXML
+    private Label fpsLabel;
+    @FXML
     private Label memText;
     @FXML
     private TabPane tabPane;
@@ -44,9 +48,15 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
 
     private final Timer timer;
 
+    private int frameTimeIndex = 0;
+    private boolean arrayFilled = false;
+    private final AnimationTimer fpsTimer;
+    private final long[] frameTimes = new long[100];
+
     private MainViewController() {
         super("MainView.fxml");
         this.timer = new Timer();
+        this.fpsTimer = this.fps();
         this.getStage().setTitle("x-browser");
         this.setSizeByProp(0.7, 0.8);
         this.triggerGC.setCursor(Cursor.HAND);
@@ -54,6 +64,33 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
         this.tabPane.getTabs().add(new WebPageController().getTab());
         this.tabPane.getTabs().addListener(this.tabListChangeListener());
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(this.tabSelectChangeListener());
+    }
+
+    /**
+     * 使用固定帧数时间法,计算FPS
+     */
+    private AnimationTimer fps() {
+        AnimationTimer fpsTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long oldFrameTime = frameTimes[frameTimeIndex];
+                frameTimes[frameTimeIndex] = now;
+                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
+                if (frameTimeIndex == 0) {
+                    arrayFilled = true;
+                }
+                if (arrayFilled) {
+                    //获取两帧之间的时间差
+                    var elapsedNanos = now - oldFrameTime;
+                    var elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
+                    var frameRate = 1_000_000_000.0 / elapsedNanosPerFrame;
+                    var fps = String.format("FPS: %.2f", frameRate);
+                    fpsLabel.setText(fps);
+                }
+            }
+        };
+        fpsTimer.start();
+        return fpsTimer;
     }
 
     /**
@@ -149,6 +186,7 @@ public class MainViewController extends AbstractWindowController<BorderPane> imp
     @Override
     public void dispose() {
         this.timer.cancel();
+        this.fpsTimer.stop();
     }
 
     private static MainViewController mainViewController;
