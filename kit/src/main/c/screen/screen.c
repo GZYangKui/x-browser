@@ -3,10 +3,6 @@
 //
 #include "screen.h"
 
-#ifdef WIN32
-#include <winuser.h>
-#endif
-
-void scr_info() {
-
-};
+int sum(int a, int b) {
+    return a + b;
+}

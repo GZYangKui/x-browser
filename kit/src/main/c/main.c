@@ -1,7 +1,11 @@
 #include <stdio.h>
-#include <gtk/gtk.h>
 
-int main() {
-    printf("Hello, World!\n");
+int main(int argc, char **argv) {
+    extern char *to_hex(int value);
+    int value = 60536;
+    char *hex = to_hex(value);
+
+    printf("%d转换为十六进制=%s\n",value,hex);
+
     return 0;
 }
