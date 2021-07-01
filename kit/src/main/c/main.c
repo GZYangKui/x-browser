@@ -7,5 +7,9 @@ int main(int argc, char **argv) {
 
     printf("%d转换为十六进制=%s\n",value,hex);
 
+    extern void c_brightness();
+
+    c_brightness();
+
     return 0;
 }
