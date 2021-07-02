@@ -4,28 +4,11 @@ cmake_minimum_required(VERSION 3.19)
 #项目名称
 project(x-lite)
 
-message("include path:${X11_LIBS}")
-
 set(CMAKE_C_STANDARD 99)
 
-configure_file(
-        "${PROJECT_SOURCE_DIR}/config.h.in"
-        "${PROJECT_BINARY_DIR}/config.h"
-)
 
-option(USER_MY_MATH "Use Provided math implement" OFF)
-
-if (USER_MY_MATH)
-    #添加screen子目录
-    add_subdirectory(screen)
-    add_subdirectory(util)
-
-endif (USER_MY_MATH)
-
-find_package(GTK)
-
-
-message("${GTK_INCLUDE_DIR}")
+add_subdirectory(util)
+add_subdirectory(screen)
 
 #遍历./下所有源文件 并且赋值给DIR_SRCS变量
 aux_source_directory(. DIR_SRCS)
@@ -34,5 +17,6 @@ aux_source_directory(. DIR_SRCS)
 add_executable(Demo ${DIR_SRCS})
 
 #添加链接库
-target_link_libraries(Demo Screen)
 target_link_libraries(Demo Util)
+target_link_libraries(Demo Screen)
+target_link_libraries(Demo /usr/lib/x86_64-linux-gnu/libm.so)

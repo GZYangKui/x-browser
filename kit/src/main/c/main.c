@@ -1,15 +1,15 @@
 #include <stdio.h>
+#include "util/util.h"
 
 int main(int argc, char **argv) {
-    extern char *to_hex(int value);
     int value = 60536;
     char *hex = to_hex(value);
 
     printf("%d转换为十六进制=%s\n",value,hex);
 
-    extern void c_brightness();
+    int or_value = hex_to_natual(hex);
 
-    c_brightness();
+    printf("%s转换十进制=%d",hex,or_value);
 
     return 0;
 }

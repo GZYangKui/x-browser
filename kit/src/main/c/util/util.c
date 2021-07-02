@@ -5,6 +5,7 @@
 #include "util.h"
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 const char hex_map[] = {
         '0',
@@ -42,13 +43,27 @@ char *to_hex(int value) {
 
     *(hex + index) = -1;
     int len = int_arr_len(hex, -1);
-    char *hex_str = (char *)malloc(len);
-    for (int i = len-1; i >= 0; i--) {
-        hex_str[len-1 - i] = hex_map[hex[i]];
+    char *hex_str = (char *) malloc(len);
+    for (int i = len - 1; i >= 0; i--) {
+        hex_str[len - 1 - i] = hex_map[hex[i]];
     }
     //清除临时数组
     free(hex);
     return hex_str;
+}
+
+int hex_to_natual(char *hex) {
+    int len = (int)strlen(hex);
+    extern int location(char c);
+    int natual = 0;
+    for (int i = len-1; i>=0; i--) {
+        int index = location(*(hex + i));
+        if (index == -1) {
+            continue;
+        }
+        natual+=index * ((int)pow(16, len-1-i));
+    }
+    return natual;
 }
 
 int int_arr_len(const int *target, int end) {
@@ -63,4 +78,14 @@ int int_arr_len(const int *target, int end) {
         length++;
     }
     return length;
+}
+
+int location(char c) {
+    for (int i = 0; i < 16; ++i) {
+        char t = hex_map[i];
+        if (t == c) {
+            return i;
+        }
+    }
+    return -1;
 }
