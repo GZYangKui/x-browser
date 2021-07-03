@@ -6,7 +6,7 @@ project(x-lite VERSION 10)
 
 
 add_subdirectory(util)
-
+add_subdirectory(macro)
 
 set(CMAKE_C_STANDARD 99)
 
