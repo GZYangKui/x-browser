@@ -24,5 +24,16 @@ extern int hex_to_natual(char *hex);
  */
 extern int int_arr_len(const int *target, int end);
 
+/**
+ *
+ * 生成指定区间随机数
+ * @param star 区间起始
+ * @param end 区间结束
+ * @return  返回随机数字
+ */
+extern int num_r(int start, int end);
+
+#define RANDOM (-1.0+2.0*(double)rand()/RAND_MAX)
+
 #define X_LITE_UTIL_H
 #endif //X_LITE_UTIL_H

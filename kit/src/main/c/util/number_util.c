@@ -2,10 +2,13 @@
 // Created by yangkui on 2021/6/30.
 //
 
-#include "util.h"
+#include <math.h>
 #include <string.h>
 #include <stdlib.h>
-#include <math.h>
+#include <time.h>
+#include <stdio.h>
+#include "includes/number_util.h"
+
 
 const char hex_map[] = {
         '0',
@@ -53,15 +56,15 @@ char *to_hex(int value) {
 }
 
 int hex_to_natual(char *hex) {
-    int len = (int)strlen(hex);
+    int len = (int) strlen(hex);
     extern int location(char c);
     int natual = 0;
-    for (int i = len-1; i>=0; i--) {
+    for (int i = len - 1; i >= 0; i--) {
         int index = location(*(hex + i));
         if (index == -1) {
             continue;
         }
-        natual+=index * ((int)pow(16, len-1-i));
+        natual += index * ((int) pow(16, len - 1 - i));
     }
     return natual;
 }
@@ -80,6 +83,7 @@ int int_arr_len(const int *target, int end) {
     return length;
 }
 
+
 int location(char c) {
     for (int i = 0; i < 16; ++i) {
         char t = hex_map[i];
@@ -88,4 +92,12 @@ int location(char c) {
         }
     }
     return -1;
+}
+
+int num_r(int start, int end) {
+    //初始化种子
+    srand(time(NULL));
+    double prop = (double) rand() / RAND_MAX;
+    end = end-start;
+    return start + (int) (prop * end);
 }
