@@ -4,6 +4,13 @@ cmake_minimum_required(VERSION 3.19)
 #项目名称
 project(x-lite VERSION 10)
 
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+include_directories("${GTK3_INCLUDE_DIRS}")
+list(APPEND GTK_LIBS ${GTK3_LIBRARIES})
+
 
 add_subdirectory(util)
 add_subdirectory(macro)
@@ -18,5 +25,6 @@ add_executable(Demo ${DIR_SRCS})
 
 #添加链接库
 target_link_libraries(Demo Util)
+target_link_libraries(Demo ${GTK_LIBS})
 target_link_libraries(Demo /usr/lib/x86_64-linux-gnu/libm.so)
 target_include_directories(Demo PUBLIC "${PROJECT_BINARY_DIR}")

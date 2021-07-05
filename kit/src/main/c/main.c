@@ -1,22 +1,41 @@
-#include <stdio.h>
-#include "util/includes/number_util.h"
+#include <gtk/gtk.h>
 
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+    g_print ("Hello World\n");
+}
 
-int main(int argc, char **argv) {
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+    GtkWidget *window;
+    GtkWidget *button;
 
-    int value = 60536;
-    char *hex = to_hex(value);
+    window = gtk_application_window_new (app);
+    gtk_window_set_title (GTK_WINDOW (window), "Window");
+    gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
 
-    printf("%d转换为十六进制=%s\n", value, hex);
+    button = gtk_button_new_with_label ("Hello World");
+    g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+//    gtk_window_set_child (GTK_WINDOW (window), button);
 
-    int or_value = hex_to_natual(hex);
+    gtk_window_present (GTK_WINDOW (window));
+}
 
-    printf("%s转换十进制=%d\n", hex, or_value);
+int
+main (int    argc,
+      char **argv)
+{
+    GtkApplication *app;
+    int status;
 
-    {
-        int r_value = num_r(10, 500);
-        printf("随机数:%d\n", r_value);
-    }
+    app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+    g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+    status = g_application_run (G_APPLICATION (app), argc, argv);
+    g_object_unref (app);
 
-    return 0;
+    return status;
 }
