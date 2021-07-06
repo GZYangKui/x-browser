@@ -17,6 +17,8 @@ add_subdirectory(macro)
 
 set(CMAKE_C_STANDARD 99)
 
+FILE(COPY ./assets DESTINATION ${PROJECT_BINARY_DIR})
+
 #遍历./下所有源文件 并且赋值给DIR_SRCS变量
 aux_source_directory(. DIR_SRCS)
 
