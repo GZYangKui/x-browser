@@ -21,9 +21,10 @@ FILE(COPY ./assets DESTINATION ${PROJECT_BINARY_DIR})
 
 #遍历./下所有源文件 并且赋值给DIR_SRCS变量
 aux_source_directory(. DIR_SRCS)
+aux_source_directory(./include PROJECT_INCLUDE)
 
 #指定生成目标
-add_executable(Demo ${DIR_SRCS})
+add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE})
 
 #添加链接库
 target_link_libraries(Demo Util)

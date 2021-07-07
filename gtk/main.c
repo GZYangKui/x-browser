@@ -1,38 +1,60 @@
 #include <gtk/gtk.h>
+#include "include/record_detail.h"
 
-static void print_hello(GtkWidget *widget, gpointer data) {
-    g_print("Hello World\n");
+static GtkWidget *top_controller() {
+    GtkWidget *btn_box, *btn, *btn1, *btn2, *btn3, *btn4;
+    btn = gtk_button_new_with_label("明细");
+    btn1 = gtk_button_new_with_label("图表");
+    btn2 = gtk_button_new_with_label("记账");
+    btn3 = gtk_button_new_with_label("社区");
+    btn4 = gtk_button_new_with_label("我的");
+
+    btn_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
+    gtk_container_add(GTK_CONTAINER(btn_box), btn);
+    gtk_container_add(GTK_CONTAINER(btn_box), btn1);
+    gtk_container_add(GTK_CONTAINER(btn_box), btn2);
+    gtk_container_add(GTK_CONTAINER(btn_box), btn3);
+    gtk_container_add(GTK_CONTAINER(btn_box), btn4);
+
+    gtk_button_box_set_layout((GtkButtonBox *) btn_box, GTK_BUTTONBOX_EXPAND);
+
+
+    return btn_box;
+}
+
+static GtkWidget *stack_switcher(GtkWidget *stack) {
+    GtkWidget *switcher = gtk_stack_switcher_new();
+    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
+    return switcher;
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
-    GtkWidget *window;
-    GtkWidget *button;
-    GtkWidget *root_pane;
+    GtkWidget *pane, *window;
 
+    GtkWidget *stack, *switcher;
+
+    //窗口相关设置
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW (window), "x-browser");
     gtk_window_set_default_size(GTK_WINDOW (window), 600, 600);
-
-    extern GdkPixbuf *load_image_none_err(char *filename);
-
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
-    root_pane = gtk_notebook_new();
-    gtk_container_add(GTK_CONTAINER(window),root_pane);
+    pane = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 
-    button = gtk_button_new_with_label("Hello World");
-    g_signal_connect (button, "clicked", G_CALLBACK(print_hello), NULL);
+    stack = gtk_stack_new();
+    switcher = stack_switcher(stack);
 
-    gtk_container_add(GTK_CONTAINER(root_pane),button);
+    gtk_stack_add_named((GtkStack *) stack, det_widget(), "det_widget");
 
-    for (int i = 0; i <20 ; ++i) {
-        gtk_container_add(GTK_CONTAINER(root_pane), gtk_label_new("test"));
-    }
 
-    gtk_notebook_set_tab_label((GtkNotebook *) root_pane, button, gtk_label_new("网页1"));
-//    gtk_container_add(GTK_CONTAINER(root_pane), gtk_label_new("测试信息"));
+    gtk_container_add(GTK_CONTAINER(pane), stack);
+    gtk_container_add(GTK_CONTAINER(pane), top_controller());
 
+    gtk_container_add(GTK_CONTAINER(window), pane);
+
+    gtk_window_set_resizable(GTK_WINDOW(window),0);
     gtk_widget_show_all(window);
+
 }
 
 int main(int argc, char **argv) {
