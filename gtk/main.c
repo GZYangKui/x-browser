@@ -1,20 +1,62 @@
 #include <gtk/gtk.h>
-#include "include/record_detail.h"
+#include "include/x_lite.h"
+
+/**
+ * 初始化底部导航栏
+ */
+static struct NavigatorItem navigators[] = {
+        {
+                "明细",
+                "detail.png"
+        },
+        {
+                "图表",
+                "form.png"
+        },
+        {
+                "记账",
+                "fee.png"
+        },
+        {
+                "社区",
+                "fortune.png"
+        },
+        {
+                "我的",
+                "my.png"
+        }
+};
+
+static void navigator_action(GtkWidget *widget, struct NavigatorItem *item) {
+    printf("%s被点击\n", item->title);
+}
 
 static GtkWidget *top_controller() {
-    GtkWidget *btn_box, *btn, *btn1, *btn2, *btn3, *btn4;
-    btn = gtk_button_new_with_label("明细");
-    btn1 = gtk_button_new_with_label("图表");
-    btn2 = gtk_button_new_with_label("记账");
-    btn3 = gtk_button_new_with_label("社区");
-    btn4 = gtk_button_new_with_label("我的");
+    GtkWidget *btn_box;
 
     btn_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
-    gtk_container_add(GTK_CONTAINER(btn_box), btn);
-    gtk_container_add(GTK_CONTAINER(btn_box), btn1);
-    gtk_container_add(GTK_CONTAINER(btn_box), btn2);
-    gtk_container_add(GTK_CONTAINER(btn_box), btn3);
-    gtk_container_add(GTK_CONTAINER(btn_box), btn4);
+
+    int size = sizeof(navigators) / sizeof(navigators[0]);
+
+    for (int i = 0; i < size; ++i) {
+        struct NavigatorItem item = navigators[i];
+        GtkWidget *btn = gtk_button_new_with_label(item.title);
+        gtk_container_add(GTK_CONTAINER(btn_box), btn);
+        //加载图片信息
+        if (item.icon != NULL) {
+            GdkPixbuf *buf = load_image_none_err(item.icon);
+            if (buf == NULL){
+                printf("加载导航图标:%s出错",item.icon);
+                continue;
+            }
+            GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
+            gtk_button_set_image((GtkButton *) btn, icon);
+            gtk_button_set_always_show_image((GtkButton *) btn,1);
+            gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
+            gtk_widget_show_all(btn);
+        }
+        g_signal_connect(btn, "clicked", (GCallback) navigator_action, &item);
+    }
 
     gtk_button_box_set_layout((GtkButtonBox *) btn_box, GTK_BUTTONBOX_EXPAND);
 
@@ -36,7 +78,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     //窗口相关设置
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW (window), "x-browser");
-    gtk_window_set_default_size(GTK_WINDOW (window), 600, 600);
+    gtk_window_set_default_size(GTK_WINDOW (window), 400, 600);
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
     pane = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
@@ -52,7 +94,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_container_add(GTK_CONTAINER(window), pane);
 
-    gtk_window_set_resizable(GTK_WINDOW(window),0);
+    gtk_window_set_resizable(GTK_WINDOW(window), 0);
     gtk_widget_show_all(window);
 
 }

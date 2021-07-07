@@ -2,7 +2,7 @@
 // Created by yangkui on 2021/7/6.
 //
 
-#include "assets.h"
+#include "include/assets.h"
 #include "util/includes/string_util.h"
 
 char *root_path = NULL;
