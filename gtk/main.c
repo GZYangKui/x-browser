@@ -7,7 +7,7 @@ static void print_hello(GtkWidget *widget, gpointer data) {
 static void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *button;
-    GtkWidget *button_box;
+    GtkWidget *root_pane;
 
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW (window), "x-browser");
@@ -17,13 +17,20 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
-     button_box = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
-    gtk_container_add(GTK_CONTAINER(window),button_box);
+    root_pane = gtk_notebook_new();
+    gtk_container_add(GTK_CONTAINER(window),root_pane);
 
     button = gtk_button_new_with_label("Hello World");
     g_signal_connect (button, "clicked", G_CALLBACK(print_hello), NULL);
 
-    gtk_container_add(GTK_CONTAINER(button_box),button);
+    gtk_container_add(GTK_CONTAINER(root_pane),button);
+
+    for (int i = 0; i <20 ; ++i) {
+        gtk_container_add(GTK_CONTAINER(root_pane), gtk_label_new("test"));
+    }
+
+    gtk_notebook_set_tab_label((GtkNotebook *) root_pane, button, gtk_label_new("网页1"));
+//    gtk_container_add(GTK_CONTAINER(root_pane), gtk_label_new("测试信息"));
 
     gtk_widget_show_all(window);
 }
