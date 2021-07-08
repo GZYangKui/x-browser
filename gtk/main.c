@@ -4,97 +4,116 @@
 /**
  * 初始化底部导航栏
  */
-static struct NavigatorItem navigators[] = {
+static NavigatorItem navigators[] = {
         {
                 "明细",
-                "detail.png"
+                "detail.png",
+                HOME
         },
         {
                 "图表",
-                "form.png"
+                "form.png",
+                FORM
         },
         {
                 "记账",
-                "fee.png"
+                "fee.png",
+                NOTE
         },
         {
                 "社区",
-                "fortune.png"
+                "fortune.png",
+                FORTUNE
         },
         {
                 "我的",
-                "my.png"
+                "my.png",
+                PERSONAL
         }
 };
 
-static void navigator_action(GtkWidget *widget, struct NavigatorItem *item) {
-    printf("%s被点击\n", item->title);
+const char *app_name = "鲨鱼记账";
+
+static GtkWidget *window, *header, *switcher;
+
+static void navigator_action(GtkWidget *widget, NavigatorItem *item) {
+    printf("%s被点击\n",item->title);
 }
 
-static GtkWidget *top_controller() {
+static GtkWidget *controller(GtkWidget *stack) {
     GtkWidget *btn_box;
 
     btn_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
 
     int size = sizeof(navigators) / sizeof(navigators[0]);
 
+    printf("数组首地址:%p\n", navigators);
     for (int i = 0; i < size; ++i) {
-        struct NavigatorItem item = navigators[i];
+        NavigatorItem item = navigators[i];
         GtkWidget *btn = gtk_button_new_with_label(item.title);
         gtk_container_add(GTK_CONTAINER(btn_box), btn);
+
+        printf("%p\n", &item);
+        g_signal_connect(btn, "clicked", G_CALLBACK(navigator_action), &navigators[i]);
+
+        if (item.meta == HOME) {
+            gtk_stack_add_named((GtkStack *) stack, det_widget(), "det_widget");
+        }
+
         //加载图片信息
         if (item.icon != NULL) {
             GdkPixbuf *buf = load_image_none_err(item.icon);
-            if (buf == NULL){
-                printf("加载导航图标:%s出错",item.icon);
-                continue;
+            if (buf != NULL) {
+                printf("加载图标:%s\n", item.icon);
+                GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
+                gtk_button_set_image((GtkButton *) btn, icon);
+                gtk_button_set_always_show_image((GtkButton *) btn, 1);
+                gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
+                gtk_widget_show_all(btn);
+                printf("完成加载:%s\n", item.icon);
             }
-            GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
-            gtk_button_set_image((GtkButton *) btn, icon);
-            gtk_button_set_always_show_image((GtkButton *) btn,1);
-            gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
-            gtk_widget_show_all(btn);
         }
-        g_signal_connect(btn, "clicked", (GCallback) navigator_action, &item);
     }
-
-    gtk_button_box_set_layout((GtkButtonBox *) btn_box, GTK_BUTTONBOX_EXPAND);
-
 
     return btn_box;
 }
 
-static GtkWidget *stack_switcher(GtkWidget *stack) {
-    GtkWidget *switcher = gtk_stack_switcher_new();
-    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
-    return switcher;
-}
-
 static void activate(GtkApplication *app, gpointer user_data) {
-    GtkWidget *pane, *window;
-
-    GtkWidget *stack, *switcher;
+    GtkWidget *stack, *pane, *center_box;
 
     //窗口相关设置
+    stack = gtk_stack_new();
+    header = gtk_header_bar_new();
     window = gtk_application_window_new(app);
-    gtk_window_set_title(GTK_WINDOW (window), "x-browser");
+    center_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+
+    gtk_window_set_title(GTK_WINDOW (window), app_name);
     gtk_window_set_default_size(GTK_WINDOW (window), 400, 600);
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
-    pane = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 
-    stack = gtk_stack_new();
-    switcher = stack_switcher(stack);
+    gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
+    gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
+    gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, 1);
 
-    gtk_stack_add_named((GtkStack *) stack, det_widget(), "det_widget");
+    switcher = gtk_stack_switcher_new();
+    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
+
+    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
 
 
-    gtk_container_add(GTK_CONTAINER(pane), stack);
-    gtk_container_add(GTK_CONTAINER(pane), top_controller());
+    gtk_container_add(GTK_CONTAINER(center_box), stack);
+    gtk_container_add(GTK_CONTAINER(center_box), controller(stack));
+
+
+    gtk_container_add(GTK_CONTAINER(pane), header);
+    gtk_container_add(GTK_CONTAINER(pane), center_box);
 
     gtk_container_add(GTK_CONTAINER(window), pane);
 
     gtk_window_set_resizable(GTK_WINDOW(window), 0);
+    gtk_window_set_decorated(GTK_WINDOW(window), 0);
     gtk_widget_show_all(window);
 
 }
