@@ -81,13 +81,6 @@ static GtkWidget *controller() {
                 break;
         }
 
-        if (item->meta == HOME) {
-            item->content = det_widget();
-        }
-        if (item->meta == FORM) {
-            item->content = form_widget();
-        }
-
         if (item->content != NULL) {
             gtk_stack_add_titled((GtkStack *) stack, item->content, item->title, item->title);
         }
@@ -121,7 +114,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
 
     gtk_window_set_title(GTK_WINDOW (window), app_name);
-    gtk_window_set_default_size(GTK_WINDOW (window), 400, 600);
+    gtk_window_set_default_size(GTK_WINDOW (window), 400, 700);
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
 
