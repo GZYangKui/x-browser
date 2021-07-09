@@ -47,30 +47,30 @@ static GtkWidget *controller(GtkWidget *stack) {
 
     int size = sizeof(navigators) / sizeof(navigators[0]);
 
-    printf("数组首地址:%p\n", navigators);
     for (int i = 0; i < size; ++i) {
-        NavigatorItem item = navigators[i];
-        GtkWidget *btn = gtk_button_new_with_label(item.title);
+        NavigatorItem *item = &navigators[i];
+
+        GtkWidget *btn = gtk_button_new_with_label(item->title);
         gtk_container_add(GTK_CONTAINER(btn_box), btn);
 
-        printf("%p\n", &item);
-        g_signal_connect(btn, "clicked", G_CALLBACK(navigator_action), &navigators[i]);
 
-        if (item.meta == HOME) {
+        g_signal_connect(btn, "clicked", G_CALLBACK(navigator_action), item);
+
+        if (item->meta == HOME) {
             gtk_stack_add_named((GtkStack *) stack, det_widget(), "det_widget");
         }
 
         //加载图片信息
-        if (item.icon != NULL) {
-            GdkPixbuf *buf = load_image_none_err(item.icon);
+        if (item->icon != NULL) {
+            GdkPixbuf *buf = load_image_none_err(item->icon);
             if (buf != NULL) {
-                printf("加载图标:%s\n", item.icon);
+                printf("加载图标:%s\n", item->icon);
                 GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
                 gtk_button_set_image((GtkButton *) btn, icon);
                 gtk_button_set_always_show_image((GtkButton *) btn, 1);
                 gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
                 gtk_widget_show_all(btn);
-                printf("完成加载:%s\n", item.icon);
+                printf("完成加载:%s\n", item->icon);
             }
         }
     }
