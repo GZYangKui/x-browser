@@ -16,7 +16,7 @@ extern GdkPixbuf *load_image_none_err(char *filename);
  * 加载图片资源
  *
  */
-extern GdkPixbuf *load_image(char *filename, GError **errs);
+extern GdkPixbuf *load_image(char *filename, GError *errs);
 
 /**
  * 获取资源根路径

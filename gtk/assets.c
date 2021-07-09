@@ -8,6 +8,10 @@
 char *root_path = NULL;
 char *img_path = "/assets/img/";
 
+extern void x_free(void *pointer);
+extern void *x_malloc(unsigned long size);
+
+
 extern char *assets_root_path() {
     if (root_path == NULL) {
         char tem[512];
@@ -15,7 +19,7 @@ extern char *assets_root_path() {
         getcwd(tem, sizeof(tem));
         unsigned long len = strlen(tem);
         //预留一位结束位
-        root_path = (char *) malloc(len + 1);
+        root_path = x_malloc(len + 1);
         memset(root_path, 0, len);
         for (int i = 0; i < len; ++i) {
             *(root_path + i) = tem[i];
@@ -25,22 +29,19 @@ extern char *assets_root_path() {
     return root_path;
 }
 
-void assets_load_error(GError **errs) {
-    printf("捕获到异常信息:%s", "");
-}
 
-extern GdkPixbuf *load_image(char *filename, GError **errs) {
+extern GdkPixbuf *load_image(char *filename, GError *errs) {
     unsigned long len = strlen(img_path) + strlen(filename);
     char path[len];
     memset(path,0,len);
     strcat(path, img_path);
     strcat(path, filename);
     char *des = str_link(assets_root_path(), path);
-    GdkPixbuf *pix_buf = gdk_pixbuf_new_from_file(des, errs);
+    GdkPixbuf *pix_buf = gdk_pixbuf_new_from_file(des, &errs);
     if (errs != NULL) {
-        assets_load_error(errs);
+        printf("加载目标资源:[%s],发生错误:%s\n",filename,errs->message);
     }
-    free(des);
+    x_free(des);
     return pix_buf;
 }
 

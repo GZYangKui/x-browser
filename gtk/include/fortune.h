@@ -6,6 +6,6 @@
 #define X_LITE_FORTUNE_H
 #include <gtk/gtk.h>
 
-extern GtkWidget *fortune_widget();
+extern GtkWidget *ft_widget();
 
 #endif //X_LITE_FORTUNE_H

@@ -3,6 +3,6 @@
 //
 #include "./include/fortune.h"
 
-extern GtkWidget *fortune_widget(){
+extern GtkWidget *ft_widget(){
     return gtk_label_new("社区");
 }

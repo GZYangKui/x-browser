@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "include/x_lite.h"
+#include "util/includes/mem_util.h"
 
 /**
  * 初始化底部导航栏
@@ -41,18 +42,21 @@ const char *app_name = "鲨鱼记账";
 
 static GtkWidget *window, *header, *stack;
 
-static void navigator_action(GtkWidget *widget, NavigatorItem *item) {
-    if (item->content != NULL) {
-        gtk_stack_set_visible_child((GtkStack *) stack, item->content);
+static void nav_action(GtkWidget *widget, NavigatorItem *item) {
+    if (item->content == NULL) {
+        return;
     }
+    gtk_stack_set_visible_child((GtkStack *) stack, item->content);
+    gtk_header_bar_set_subtitle((GtkHeaderBar *) header, item->title);
 }
 
-static GtkWidget *controller() {
+static GtkWidget *controller(GtkWidget *k) {
+
     GtkWidget *btn_box;
 
     btn_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
 
-    int size = sizeof(navigators) / sizeof(navigators[0]);
+    int size = sizeof(navigators) / sizeof(NavigatorItem);
 
     for (int i = 0; i < size; ++i) {
         NavigatorItem *item = &navigators[i];
@@ -61,46 +65,48 @@ static GtkWidget *controller() {
         gtk_container_add(GTK_CONTAINER(btn_box), btn);
 
 
-        g_signal_connect(btn, "clicked", G_CALLBACK(navigator_action), item);
+        g_signal_connect(btn, "clicked", G_CALLBACK(nav_action), item);
 
+        GtkWidget *content = NULL;
         switch (item->meta) {
             case HOME:
-                item->content = det_widget();
+                content = det_widget();
                 break;
             case FORM:
-                item->content = form_widget();
+                content = form_widget();
                 break;
             case FORTUNE:
-                item->content = fortune_widget();
+                content = ft_widget();
                 break;
             case NOTE:
-                item->content = note_widget();
+                content = note_widget();
                 break;
             case PERSONAL:
-                item->content = my_widget();
+                content = my_widget();
                 break;
         }
-
-        if (item->content != NULL) {
-            gtk_stack_add_titled((GtkStack *) stack, item->content, item->title, item->title);
+        item->content = content;
+        if (content != NULL) {
+            gtk_stack_add_named((GtkStack *) stack, content, item->title);
         }
-
         //加载图片信息
         if (item->icon != NULL) {
             GdkPixbuf *buf = load_image_none_err(item->icon);
             if (buf != NULL) {
-                printf("加载图标:%s\n", item->icon);
                 GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
                 gtk_button_set_image((GtkButton *) btn, icon);
                 gtk_button_set_always_show_image((GtkButton *) btn, 1);
                 gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
                 gtk_widget_show_all(btn);
-                printf("完成加载:%s\n", item->icon);
             }
         }
     }
 
     return btn_box;
+}
+
+static void header_move(GtkWidget *widget, gpointer *data) {
+    printf("点击\n");
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
@@ -122,18 +128,17 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, 1);
 
-
     gtk_container_add(GTK_CONTAINER(center_box), stack);
     gtk_container_add(GTK_CONTAINER(center_box), controller(stack));
 
 
-    gtk_container_add(GTK_CONTAINER(pane), header);
     gtk_container_add(GTK_CONTAINER(pane), center_box);
 
     gtk_container_add(GTK_CONTAINER(window), pane);
-
+    //自定义title bar
+    gtk_window_set_titlebar(GTK_WINDOW(window), header);
     gtk_window_set_resizable(GTK_WINDOW(window), 0);
-    gtk_window_set_decorated(GTK_WINDOW(window), 0);
+
     gtk_widget_show_all(window);
 
 }
