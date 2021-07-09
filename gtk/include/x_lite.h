@@ -5,7 +5,11 @@
 #ifndef X_LITE_X_LITE_H
 #define X_LITE_X_LITE_H
 
+#include "my.h"
+#include "form.h"
+#include "note.h"
 #include "assets.h"
+#include "fortune.h"
 #include "record_detail.h"
 
 typedef enum {
@@ -21,6 +25,7 @@ typedef enum {
 typedef struct {
     char *title;
     char *icon;
+    GtkWidget *content;
     NavigatorItemMeta meta;
 } NavigatorItem;
 

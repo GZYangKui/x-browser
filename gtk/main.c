@@ -8,39 +8,46 @@ static NavigatorItem navigators[] = {
         {
                 "明细",
                 "detail.png",
+                NULL,
                 HOME
         },
         {
                 "图表",
                 "form.png",
+                NULL,
                 FORM
         },
         {
                 "记账",
                 "fee.png",
+                NULL,
                 NOTE
         },
         {
                 "社区",
                 "fortune.png",
+                NULL,
                 FORTUNE
         },
         {
                 "我的",
                 "my.png",
+                NULL,
                 PERSONAL
         }
 };
 
 const char *app_name = "鲨鱼记账";
 
-static GtkWidget *window, *header, *switcher;
+static GtkWidget *window, *header, *stack;
 
 static void navigator_action(GtkWidget *widget, NavigatorItem *item) {
-    printf("%s被点击\n",item->title);
+    if (item->content != NULL) {
+        gtk_stack_set_visible_child((GtkStack *) stack, item->content);
+    }
 }
 
-static GtkWidget *controller(GtkWidget *stack) {
+static GtkWidget *controller() {
     GtkWidget *btn_box;
 
     btn_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
@@ -56,8 +63,33 @@ static GtkWidget *controller(GtkWidget *stack) {
 
         g_signal_connect(btn, "clicked", G_CALLBACK(navigator_action), item);
 
+        switch (item->meta) {
+            case HOME:
+                item->content = det_widget();
+                break;
+            case FORM:
+                item->content = form_widget();
+                break;
+            case FORTUNE:
+                item->content = fortune_widget();
+                break;
+            case NOTE:
+                item->content = note_widget();
+                break;
+            case PERSONAL:
+                item->content = my_widget();
+                break;
+        }
+
         if (item->meta == HOME) {
-            gtk_stack_add_named((GtkStack *) stack, det_widget(), "det_widget");
+            item->content = det_widget();
+        }
+        if (item->meta == FORM) {
+            item->content = form_widget();
+        }
+
+        if (item->content != NULL) {
+            gtk_stack_add_titled((GtkStack *) stack, item->content, item->title, item->title);
         }
 
         //加载图片信息
@@ -79,7 +111,7 @@ static GtkWidget *controller(GtkWidget *stack) {
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
-    GtkWidget *stack, *pane, *center_box;
+    GtkWidget *pane, *center_box;
 
     //窗口相关设置
     stack = gtk_stack_new();
@@ -96,11 +128,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
     gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, 1);
-
-    switcher = gtk_stack_switcher_new();
-    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
-
-    gtk_stack_switcher_set_stack((GtkStackSwitcher *) switcher, (GtkStack *) stack);
 
 
     gtk_container_add(GTK_CONTAINER(center_box), stack);

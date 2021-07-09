@@ -24,7 +24,7 @@ aux_source_directory(. DIR_SRCS)
 aux_source_directory(./include PROJECT_INCLUDE)
 
 #指定生成目标
-add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE})
+add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE} form.c include/form.h include/note.h note.c fortune.c include/fortune.h my.c include/my.h)
 
 #添加链接库
 target_link_libraries(Demo Util)
