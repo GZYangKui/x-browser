@@ -50,7 +50,7 @@ static void nav_action(GtkWidget *widget, NavigatorItem *item) {
     gtk_header_bar_set_subtitle((GtkHeaderBar *) header, item->title);
 }
 
-static GtkWidget *controller(GtkWidget *k) {
+static GtkWidget *controller() {
 
     GtkWidget *btn_box;
 
@@ -63,9 +63,6 @@ static GtkWidget *controller(GtkWidget *k) {
 
         GtkWidget *btn = gtk_button_new_with_label(item->title);
         gtk_container_add(GTK_CONTAINER(btn_box), btn);
-
-
-        g_signal_connect(btn, "clicked", G_CALLBACK(nav_action), item);
 
         GtkWidget *content = NULL;
         switch (item->meta) {
@@ -86,9 +83,9 @@ static GtkWidget *controller(GtkWidget *k) {
                 break;
         }
         item->content = content;
-        if (content != NULL) {
-            gtk_stack_add_named((GtkStack *) stack, content, item->title);
-        }
+        g_signal_connect(btn, "clicked", G_CALLBACK(nav_action), item);
+
+        gtk_stack_add_named((GtkStack *) stack, content, item->title);
         //加载图片信息
         if (item->icon != NULL) {
             GdkPixbuf *buf = load_image_none_err(item->icon);
@@ -129,7 +126,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, 1);
 
     gtk_container_add(GTK_CONTAINER(center_box), stack);
-    gtk_container_add(GTK_CONTAINER(center_box), controller(stack));
+    gtk_container_add(GTK_CONTAINER(center_box), controller());
 
 
     gtk_container_add(GTK_CONTAINER(pane), center_box);

@@ -20,7 +20,6 @@ extern char *assets_root_path() {
         unsigned long len = strlen(tem);
         //预留一位结束位
         root_path = x_malloc(len + 1);
-        memset(root_path, 0, len);
         for (int i = 0; i < len; ++i) {
             *(root_path + i) = tem[i];
         }

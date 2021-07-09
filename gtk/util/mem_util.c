@@ -2,7 +2,8 @@
 // Created by yangkui on 2021/7/9.
 //
 
-#include <memory.h>
+#include <string.h>
+#include <stdio.h>
 #include "includes/mem_util.h"
 
 extern void x_free(void *pointer) {
@@ -16,5 +17,6 @@ extern void x_free(void *pointer) {
 extern void *x_malloc(unsigned long size) {
     void *pointer = (void *) malloc(size);
     memset(pointer, 0, size);
+    printf("成功分配:%ld字节\n",size);
     return pointer;
 }
