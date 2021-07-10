@@ -2,9 +2,7 @@
 // Created by yangkui on 2021/7/9.
 //
 
-#include <string.h>
-#include <stdio.h>
-#include "includes/mem_util.h"
+#include "include/common.h"
 
 extern void x_free(void *pointer) {
     if (pointer == NULL) {

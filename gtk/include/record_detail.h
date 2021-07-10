@@ -5,6 +5,7 @@
 #ifndef X_LITE_RECORD_DETAIL_H
 #define X_LITE_RECORD_DETAIL_H
 
+#include "common.h"
 #include <gtk/gtk.h>
 
 /**

@@ -5,6 +5,7 @@
 #ifndef X_LITE_ASSETS_H
 #define X_LITE_ASSETS_H
 
+#include "common.h"
 #include <gdk/gdk.h>
 
 /**

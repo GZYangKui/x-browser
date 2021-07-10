@@ -4,6 +4,8 @@
 
 #ifndef X_LITE_FORM_H
 #define X_LITE_FORM_H
+
+#include "common.h"
 #include <gtk/gtk.h>
 
 GtkWidget *form_widget();

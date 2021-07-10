@@ -1,6 +1,5 @@
 #include <gtk/gtk.h>
 #include "include/x_lite.h"
-#include "util/includes/mem_util.h"
 
 /**
  * 初始化底部导航栏
@@ -92,7 +91,7 @@ static GtkWidget *controller() {
             if (buf != NULL) {
                 GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
                 gtk_button_set_image((GtkButton *) btn, icon);
-                gtk_button_set_always_show_image((GtkButton *) btn, 1);
+                gtk_button_set_always_show_image((GtkButton *) btn, TRUE);
                 gtk_button_set_image_position((GtkButton *) btn, GTK_POS_TOP);
                 gtk_widget_show_all(btn);
             }
@@ -123,7 +122,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
     gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
-    gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, 1);
+    gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
 
     gtk_container_add(GTK_CONTAINER(center_box), stack);
     gtk_container_add(GTK_CONTAINER(center_box), controller());
@@ -134,7 +133,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_container_add(GTK_CONTAINER(window), pane);
     //自定义title bar
     gtk_window_set_titlebar(GTK_WINDOW(window), header);
-    gtk_window_set_resizable(GTK_WINDOW(window), 0);
+    gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
     gtk_widget_show_all(window);
 

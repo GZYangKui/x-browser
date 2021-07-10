@@ -4,6 +4,7 @@
 
 #ifndef X_LITE_NOTE_H
 #define X_LITE_NOTE_H
+#include "common.h"
 #include <gtk/gtk.h>
 
 extern GtkWidget *note_widget();

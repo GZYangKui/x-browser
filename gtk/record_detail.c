@@ -31,7 +31,7 @@ static GtkWidget *override() {
     gtk_container_add(GTK_CONTAINER(box1), title);
     gtk_container_add(GTK_CONTAINER(box1), date_picker);
     gtk_button_set_image_position((GtkButton *) date_picker, GTK_POS_RIGHT);
-    gtk_button_set_always_show_image((GtkButton *) date_picker, 1);
+    gtk_button_set_always_show_image((GtkButton *) date_picker, TRUE);
     gtk_widget_set_halign(box1, GTK_ALIGN_CENTER);
 
 

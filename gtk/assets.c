@@ -3,13 +3,10 @@
 //
 
 #include "include/assets.h"
-#include "util/includes/string_util.h"
+#include "include/string_util.h"
 
 char *root_path = NULL;
 char *img_path = "/assets/img/";
-
-extern void x_free(void *pointer);
-extern void *x_malloc(unsigned long size);
 
 
 extern char *assets_root_path() {

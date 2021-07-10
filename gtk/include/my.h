@@ -4,6 +4,7 @@
 
 #ifndef X_LITE_MY_H
 #define X_LITE_MY_H
+#include "common.h"
 #include <gtk/gtk.h>
 
 extern GtkWidget *my_widget();

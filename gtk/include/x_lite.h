@@ -8,6 +8,7 @@
 #include "my.h"
 #include "form.h"
 #include "note.h"
+#include "common.h"
 #include "assets.h"
 #include "fortune.h"
 #include "record_detail.h"

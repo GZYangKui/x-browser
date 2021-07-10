@@ -2,11 +2,7 @@
 // Created by yangkui on 2021/7/6.
 //
 
-#include <string.h>
-#include <stdio.h>
-#include "includes/string_util.h"
-
-extern void* x_malloc(unsigned long size);
+#include "../include/string_util.h"
 
 extern char *str_link(char *a, char *b) {
     //预留一位结束位

@@ -4,6 +4,8 @@
 
 #ifndef X_LITE_FORTUNE_H
 #define X_LITE_FORTUNE_H
+
+#include "common.h"
 #include <gtk/gtk.h>
 
 extern GtkWidget *ft_widget();

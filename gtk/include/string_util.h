@@ -4,6 +4,9 @@
 
 #ifndef X_LITE_STRING_UTIL_H
 #define X_LITE_STRING_UTIL_H
+
+#include "common.h"
+
 /**
  *
  * 字符串连接

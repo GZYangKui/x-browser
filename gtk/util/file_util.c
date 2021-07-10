@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "includes/file_util.h"
+#include "../include/file_util.h"
 
 char *r_file(char *path) {
     FILE *file = fopen(path, "r");
