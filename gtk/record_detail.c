@@ -4,7 +4,14 @@
 
 #include "include/record_detail.h"
 
-static GtkWidget *pane;
+static GtkWidget *pane,*date_picker;
+
+static void open_date_pick(GtkWidget widget,gpointer data){
+    GtkWidget *dialog = gtk_dialog_new();
+
+    gtk_dialog_add_buttons(GTK_DIALOG(dialog),"确定","ok","取消","cancel",NULL);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+}
 
 static GtkWidget *override() {
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 20);
@@ -15,15 +22,16 @@ static GtkWidget *override() {
 
 
     GtkWidget *title = gtk_label_new("2021年");
-    GtkWidget *btn = gtk_button_new_with_label("7月");
+    date_picker = gtk_button_new_with_label("7月");
+    g_signal_connect(date_picker,"clicked",G_CALLBACK(open_date_pick),NULL);
     gtk_button_set_image(
-            (GtkButton *) btn,
+            (GtkButton *) date_picker,
             gtk_image_new_from_pixbuf(load_image_none_err("expand.png"))
     );
     gtk_container_add(GTK_CONTAINER(box1), title);
-    gtk_container_add(GTK_CONTAINER(box1), btn);
-    gtk_button_set_image_position((GtkButton *) btn, GTK_POS_RIGHT);
-    gtk_button_set_always_show_image((GtkButton *) btn, 1);
+    gtk_container_add(GTK_CONTAINER(box1), date_picker);
+    gtk_button_set_image_position((GtkButton *) date_picker, GTK_POS_RIGHT);
+    gtk_button_set_always_show_image((GtkButton *) date_picker, 1);
     gtk_widget_set_halign(box1, GTK_ALIGN_CENTER);
 
 
