@@ -12,18 +12,34 @@
 #define TRUE 1
 #define FALSE 0
 
+/******日志输出等级*******/
+#define INFO "INFO"
+#define DEBUG "DEBUG"
+#define ERROR "ERROR"
+#define TRACE "TRACE"
+
+/**释放堆上内存**/
+#define X_FREE(p) free((void *)p); \
+        p = NULL
+
 typedef unsigned long int16;
 
-/**
- * 释放堆上内存
- * @param pointer 待释放地址
- */
-extern void x_free(void *pointer);
+typedef char *string;
+typedef const char *f_string;
+
+
+extern void info(f_string text);
+
+extern void debug(f_string text);
+
+extern void error(f_string text);
+
+extern void trace(f_string text);
 
 /**
  * 动态在堆上申请内存
  * @param size 所需内存大小,单位字节
  */
-extern void *x_malloc(unsigned long size);
+extern void *x_malloc(int16 size);
 
 #endif //X_LITE_COMMON_H

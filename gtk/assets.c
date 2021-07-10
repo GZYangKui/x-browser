@@ -37,7 +37,7 @@ extern GdkPixbuf *load_image(char *filename, GError *errs) {
     if (errs != NULL) {
         printf("加载目标资源:[%s],发生错误:%s\n",filename,errs->message);
     }
-    x_free(des);
+    X_FREE(des);
     return pix_buf;
 }
 

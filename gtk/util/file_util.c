@@ -2,15 +2,12 @@
 // Created by yangkui on 2021/7/5.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../include/file_util.h"
 
 char *r_file(char *path) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
-        printf("读取文件失败\n");
+        error("读取文件失败");
         return NULL;
     }
     int c;
@@ -22,7 +19,7 @@ char *r_file(char *path) {
             base = base*2;
             content = realloc(content, base);
             if(content == NULL){
-                printf("%s,新内存大小:%d","内存分配失败",base);
+                error("内存分配失败");
                 return NULL;
             }
         }

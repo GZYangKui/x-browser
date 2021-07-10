@@ -37,7 +37,7 @@ static NavigatorItem navigators[] = {
         }
 };
 
-const char *app_name = "鲨鱼记账";
+string app_name = "鲨鱼记账";
 
 static GtkWidget *window, *header, *stack;
 
@@ -138,6 +138,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_show_all(window);
 
 }
+
+#include <time.h>
 
 int main(int argc, char **argv) {
     GtkApplication *app;

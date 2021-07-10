@@ -4,6 +4,7 @@
 
 #ifndef X_LITE_FILE_UTIL_H
 #define X_LITE_FILE_UTIL_H
+#include "common.h"
 
 /**
  *
