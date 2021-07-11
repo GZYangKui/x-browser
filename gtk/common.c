@@ -42,6 +42,5 @@ extern void trace(f_string text) {
 extern void *x_malloc(int16 size) {
     void *pointer = (void *) malloc(size);
     memset(pointer, 0, size);
-    printf("成功分配:%ld字节\n", size);
     return pointer;
 }

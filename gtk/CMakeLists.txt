@@ -9,6 +9,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
 include_directories("${GTK3_INCLUDE_DIRS}")
+
 list(APPEND GTK_LIBS ${GTK3_LIBRARIES})
 
 
@@ -23,7 +24,7 @@ aux_source_directory(. DIR_SRCS)
 aux_source_directory(./include PROJECT_INCLUDE)
 
 #指定生成目标
-add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE} form.c include/form.h include/note.h note.c fortune.c include/fortune.h my.c include/my.h include/common.h common.c)
+add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE} form.c include/form.h include/note.h note.c fortune.c include/fortune.h my.c include/my.h include/common.h common.c xr_generate.c)
 
 #添加链接库
 target_link_libraries(Demo Util)

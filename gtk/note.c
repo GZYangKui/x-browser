@@ -13,8 +13,41 @@ static GtkWidget *stack;
 static GtkWidget *controller;
 static GtkWidget *inner_box;
 
+static const char *const keywords[] = {
+        "7",
+        "8",
+        "9",
+        "今天",
+        "4",
+        "5",
+        "6",
+        "+",
+        "1",
+        "2",
+        "3",
+        "-",
+        ".",
+        "0",
+        "x",
+        "完成"
+};
+
+static GtkWidget *keyword() {
+    GtkWidget *grid = gtk_grid_new();
+    for (int i = 0; i < 16; ++i) {
+        int row = i / 4;
+        int column = i % 4;
+        const char *name = keywords[i];
+        GtkWidget *btn = gtk_button_new_with_label(name);
+        gtk_widget_set_hexpand(btn, TRUE);
+        gtk_grid_attach(GTK_GRID(grid), btn, column, row, 1, 1);
+    }
+
+    return grid;
+}
+
 static GtkWidget *get_inner_box() {
-    inner_box = gtk_grid_new();
+    inner_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
     GtkWidget *box1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *label = gtk_label_new("备注");
@@ -26,7 +59,19 @@ static GtkWidget *get_inner_box() {
     gtk_container_add(GTK_CONTAINER(box1), entry);
     gtk_container_add(GTK_CONTAINER(box1), money);
 
-    gtk_grid_attach(GTK_GRID(inner_box), box1, 0, 0, 4, 1);
+    GtkWidget *grid = keyword();
+    gtk_widget_set_hexpand(grid, TRUE);
+    gtk_container_add(GTK_CONTAINER(inner_box), box1);
+    gtk_container_add(GTK_CONTAINER(inner_box), grid);
+
+    GdkRGBA color;
+    color.alpha = 1;
+    color.red = .38;
+    color.blue = .38;
+    color.green = .38;
+//    gtk_widget_override_background_color(GTK_WIDGET(inner_box), GTK_STATE_FLAG_NORMAL, &color);
+
+    GtkCssProvider *provider = gtk_css_provider_new();
 
     return inner_box;
 }
@@ -57,6 +102,9 @@ static void init() {
 }
 
 extern GtkWidget *note_widget() {
+    GtkWidget *scroll;
+    GtkWidget *scroll1;
+
     box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
     stack = gtk_stack_new();
@@ -78,5 +126,6 @@ extern GtkWidget *note_widget() {
     gtk_widget_set_halign(controller, GTK_ALIGN_CENTER);
 
     init();
+
     return box;
 }
