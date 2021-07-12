@@ -6,18 +6,21 @@
 #include "include/assets.h"
 #include "include/string_util.h"
 
+#define ZERO "0"
+
 static GtkWidget *box;
 static GtkWidget *widget;
 static GtkWidget *widget1;
 static GtkWidget *stack;
+static GtkWidget *money;
 static GtkWidget *controller;
 static GtkWidget *inner_box;
 
-static const char *const keywords[] = {
+static const char *keywords[] = {
         "7",
         "8",
         "9",
-        "今天",
+        "d",
         "4",
         "5",
         "6",
@@ -29,8 +32,95 @@ static const char *const keywords[] = {
         ".",
         "0",
         "x",
-        "完成"
+        "c"
 };
+
+static gboolean is_ct(f_string str) {
+    gboolean rs = strcmp(str, "d") == 0 || strcmp(str, "x") == 0 || strcmp(str, "c") == 0;
+
+    //清除输入数据
+    if (strcmp(str, "x") == 0) {
+        gtk_label_set_label((GtkLabel *) money, ZERO);
+    }
+
+    //计算结果
+    if (strcmp(str, "c") == 0) {
+
+    }
+    //触发日期选择
+    if (strcmp(str, "d") == 0) {
+
+    }
+    return rs;
+}
+
+/**
+ * 判断是否运算符
+ */
+static gboolean is_opera(const char *str) {
+    return *str == '+' || *str == '-';
+}
+
+static gboolean has_opera() {
+    const char *text = gtk_label_get_label((GtkLabel *) money);
+    int16 len = strlen(text);
+    if (len == 0) {
+        return FALSE;
+    }
+    const char *c = text + len - 1;
+    return is_opera(c);
+}
+
+static gboolean can_add_dot() {
+    const char *text = gtk_label_get_label((GtkLabel *) money);
+    int16 len = strlen(text);
+    gboolean rs = TRUE;
+    for (int16 i = len - 1; i >= 0; --i) {
+        const char *p = text + i;
+        if (strcmp(p, "+") == 0 || strcmp(p, "-") == 0 || strcmp(p, ".") == 0) {
+            if (strcmp(p, ".") == 0) {
+                rs = FALSE;
+            }
+            break;
+        }
+    }
+    return rs;
+}
+
+static void k_clicked(GtkWidget *btn, const char *data) {
+    if (is_ct(data)) {
+        return;
+    }
+    //判断是否控制键
+    const char *text = gtk_label_get_label((GtkLabel *) money);
+    int16 len = strlen(text) + 2;
+    char new_text[len];
+    memset(new_text, 0, len);
+    gboolean zero = strcmp(ZERO, text) == 0;
+    //如果当前数字为0=>直接拷贝
+    if (zero) {
+        strcat(new_text, data);
+    } else {
+        strcat(new_text, text);
+    }
+    //判断是否可以添加操作符号(+/-)
+    if (is_opera(data) && !zero) {
+        if (!has_opera()) {
+            strcat(new_text, data);
+        }
+    } else {
+        if (!zero) {
+            gboolean rs = TRUE;
+            if (strcmp(data, ".") == 0) {
+                rs = can_add_dot();
+            }
+            if (rs) {
+                strcat(new_text, data);
+            }
+        }
+    }
+    gtk_label_set_label(GTK_LABEL(money), new_text);
+}
 
 static GtkWidget *keyword() {
     GtkWidget *grid = gtk_grid_new();
@@ -41,17 +131,18 @@ static GtkWidget *keyword() {
         GtkWidget *btn = gtk_button_new_with_label(name);
         gtk_widget_set_hexpand(btn, TRUE);
         gtk_grid_attach(GTK_GRID(grid), btn, column, row, 1, 1);
+        g_signal_connect(btn, "clicked", G_CALLBACK(k_clicked), name);
     }
 
     return grid;
 }
 
 static GtkWidget *get_inner_box() {
+    money = gtk_label_new(ZERO);
     inner_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
     GtkWidget *box1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *label = gtk_label_new("备注");
-    GtkWidget *money = gtk_label_new("0.00");
     GtkWidget *entry = gtk_entry_new();
     gtk_widget_set_hexpand(entry, TRUE);
     gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "点击输入备注");
