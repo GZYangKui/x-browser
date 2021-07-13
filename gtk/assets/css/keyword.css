@@ -1,8 +1,4 @@
-grid {
-    background-color: #9c9ce5;
-    font-size: 1em;
-}
-
-grid > button {
+box {
+    padding: 1em;
     background-color: #9c9ce5;
 }

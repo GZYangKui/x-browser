@@ -54,20 +54,20 @@ static void calculate() {
     if (index == len - 1) {
         return;
     }
-    char a[index];
-    char b[len - index];
+    char a[index + 1];
+    char b[len];
 
-    memset(a, 0, index);
-    memset(b, 0, len - index);
+    memset(a, 0, index + 1);
+    memset(b, 0, len);
 
     strncpy(a, text, index);
-    strncpy(b, text + index, len - index);
+    strncpy(b, (text + index + 1), len);
 
     double af = atof(a);
     double bf = atof(b);
 
-    printf("%lf\n", af);
-    printf("%lf\n", bf);
+    printf("a = %lf\n", af);
+    printf("b = %lf\n", bf);
 
     double total = af + bf;
 
@@ -141,6 +141,9 @@ static void k_clicked(GtkWidget *btn, const char *data) {
     gboolean zero = strcmp(ZERO, text) == 0;
     //如果当前数字为0=>直接拷贝
     if (zero) {
+        if (is_opera(data)) {
+            return;
+        }
         strcat(new_text, data);
     } else {
         strcat(new_text, text);
@@ -183,14 +186,6 @@ static GtkWidget *keyword() {
         gtk_grid_attach(GTK_GRID(grid), btn, column, row, 1, 1);
         g_signal_connect(btn, "clicked", G_CALLBACK(k_clicked), name);
     }
-    GtkCssProvider *provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_resource(provider, "kw_style.css");
-    gtk_style_context_add_provider(
-            gtk_widget_get_style_context(grid),
-            GTK_STYLE_PROVIDER(provider),
-            GTK_STYLE_PROVIDER_PRIORITY_FALLBACK
-    );
-
     return grid;
 }
 
@@ -212,14 +207,13 @@ static GtkWidget *get_inner_box() {
     gtk_container_add(GTK_CONTAINER(inner_box), box1);
     gtk_container_add(GTK_CONTAINER(inner_box), grid);
 
-    GdkRGBA color;
-    color.alpha = 1;
-    color.red = .38;
-    color.blue = .38;
-    color.green = .38;
-//    gtk_widget_override_background_color(GTK_WIDGET(inner_box), GTK_STATE_FLAG_NORMAL, &color);
-
     GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_resource(provider, "kw_style.css");
+    gtk_style_context_add_provider(
+            gtk_widget_get_style_context(inner_box),
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_FALLBACK
+    );
 
     return inner_box;
 }
