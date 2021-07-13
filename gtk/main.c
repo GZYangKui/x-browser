@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include "include/x.h"
 #include "include/x_lite.h"
 
 /**
@@ -106,6 +107,9 @@ static void header_move(GtkWidget *widget, gpointer *data) {
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
+    //注册资源
+    x_get_resource();
+
     GtkWidget *pane, *center_box;
 
     //窗口相关设置

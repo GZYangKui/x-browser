@@ -1,0 +1,8 @@
+grid {
+    background-color: #9c9ce5;
+    font-size: 1em;
+}
+
+grid > button {
+    background-color: #9c9ce5;
+}

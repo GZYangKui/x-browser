@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+    <gresource>
+        <file alias="kw_clear.png">assets/img/kw/clear.png</file>
+        <file alias="kw_style.css">assets/css/keyword.css</file>
+        <!--        <file compressed="true">dialog.ui</file>-->
+        <!--        <file preprocess="xml-stripblanks">menumarkup.xml</file>-->
+        <!--        <file alias="example.css">data/example.css</file>-->
+    </gresource>
+</gresources>

@@ -6,7 +6,7 @@
 #include "include/assets.h"
 #include "include/string_util.h"
 
-#define ZERO "0"
+#define ZERO "0.00"
 
 static GtkWidget *box;
 static GtkWidget *widget;
@@ -32,11 +32,54 @@ static const char *keywords[] = {
         ".",
         "0",
         "x",
-        "c"
+        "完成"
 };
 
+static void calculate() {
+    const char *text = gtk_label_get_label(GTK_LABEL(money));
+    int index = -1;
+    int16 len = strlen(text);
+    for (int i = 0; i < len; ++i) {
+        char temp = *(text + i);
+        if (temp == '+' || temp == '-') {
+            index = i;
+            break;
+        }
+    }
+    //未找到运算符(+/-)
+    if (index == -1) {
+        return;
+    }
+    //不满足两位运算
+    if (index == len - 1) {
+        return;
+    }
+    char a[index];
+    char b[len - index];
+
+    memset(a, 0, index);
+    memset(b, 0, len - index);
+
+    strncpy(a, text, index);
+    strncpy(b, text + index, len - index);
+
+    double af = atof(a);
+    double bf = atof(b);
+
+    printf("%lf\n", af);
+    printf("%lf\n", bf);
+
+    double total = af + bf;
+
+    char t[64];
+
+    sprintf(t, "%.2f", total);
+
+    gtk_label_set_label(GTK_LABEL(money), t);
+}
+
 static gboolean is_ct(f_string str) {
-    gboolean rs = strcmp(str, "d") == 0 || strcmp(str, "x") == 0 || strcmp(str, "c") == 0;
+    gboolean rs = strcmp(str, "d") == 0 || strcmp(str, "x") == 0 || strcmp(str, "完成") == 0;
 
     //清除输入数据
     if (strcmp(str, "x") == 0) {
@@ -44,8 +87,8 @@ static gboolean is_ct(f_string str) {
     }
 
     //计算结果
-    if (strcmp(str, "c") == 0) {
-
+    if (strcmp(str, "完成") == 0) {
+        calculate();
     }
     //触发日期选择
     if (strcmp(str, "d") == 0) {
@@ -61,8 +104,7 @@ static gboolean is_opera(const char *str) {
     return *str == '+' || *str == '-';
 }
 
-static gboolean has_opera() {
-    const char *text = gtk_label_get_label((GtkLabel *) money);
+static gboolean has_opera(const char *text) {
     int16 len = strlen(text);
     if (len == 0) {
         return FALSE;
@@ -77,7 +119,6 @@ static gboolean can_add_dot() {
     gboolean rs = TRUE;
     for (int16 i = len - 1; i >= 0; --i) {
         const char p = *(text + i);
-        printf("%c\n", p);
         if (p == '+' || p == '-' || p == '.') {
             if (p == '.') {
                 rs = FALSE;
@@ -106,8 +147,10 @@ static void k_clicked(GtkWidget *btn, const char *data) {
     }
     //判断是否可以添加操作符号(+/-)
     if (is_opera(data) && !zero) {
-        if (!has_opera()) {
+        if (!has_opera(text)) {
             strcat(new_text, data);
+        } else {
+            calculate();
         }
     } else {
         if (!zero) {
@@ -124,16 +167,29 @@ static void k_clicked(GtkWidget *btn, const char *data) {
 }
 
 static GtkWidget *keyword() {
+
     GtkWidget *grid = gtk_grid_new();
     for (int i = 0; i < 16; ++i) {
         int row = i / 4;
         int column = i % 4;
         const char *name = keywords[i];
         GtkWidget *btn = gtk_button_new_with_label(name);
+        if (strcmp(name, "x") == 0) {
+            btn = gtk_button_new();
+            gtk_button_set_image(GTK_BUTTON(btn), gtk_image_new_from_resource("clear.png"));
+            gtk_button_set_always_show_image(GTK_BUTTON(btn), TRUE);
+        }
         gtk_widget_set_hexpand(btn, TRUE);
         gtk_grid_attach(GTK_GRID(grid), btn, column, row, 1, 1);
         g_signal_connect(btn, "clicked", G_CALLBACK(k_clicked), name);
     }
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_resource(provider, "kw_style.css");
+    gtk_style_context_add_provider(
+            gtk_widget_get_style_context(grid),
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_FALLBACK
+    );
 
     return grid;
 }
