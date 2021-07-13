@@ -76,9 +76,10 @@ static gboolean can_add_dot() {
     int16 len = strlen(text);
     gboolean rs = TRUE;
     for (int16 i = len - 1; i >= 0; --i) {
-        const char *p = text + i;
-        if (strcmp(p, "+") == 0 || strcmp(p, "-") == 0 || strcmp(p, ".") == 0) {
-            if (strcmp(p, ".") == 0) {
+        const char p = *(text + i);
+        printf("%c\n", p);
+        if (p == '+' || p == '-' || p == '.') {
+            if (p == '.') {
                 rs = FALSE;
             }
             break;
