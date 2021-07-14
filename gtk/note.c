@@ -4,11 +4,11 @@
 #include "include/note.h"
 #include "include/json_util.h"
 #include "include/assets.h"
+#include "include/sqlite3.h"
 #include "include/string_util.h"
 
 #define ZERO "0.00"
 
-static GtkWidget *box;
 static GtkWidget *widget;
 static GtkWidget *widget1;
 static GtkWidget *stack;
@@ -189,7 +189,7 @@ static GtkWidget *keyword() {
         GtkWidget *btn = gtk_button_new_with_label(name);
         if (strcmp(name, "x") == 0) {
             btn = gtk_button_new();
-            gtk_button_set_image(GTK_BUTTON(btn), gtk_image_new_from_resource("clear.png"));
+            gtk_button_set_image(GTK_BUTTON(btn), gtk_image_new_from_pixbuf(new_pix_buf_from_resource("/kw_clear.png")));
             gtk_button_set_always_show_image(GTK_BUTTON(btn), TRUE);
         }
         gtk_widget_set_hexpand(btn, TRUE);
@@ -234,10 +234,10 @@ static void item_select(GtkWidget *btn, NoteItem *item) {
 
 
 static void init() {
-    string root = assets_root_path();
-    string target = str_link(root, "/assets/config/disburse.json");
-    cJSON *json = parser_json_from_file(target);
-    X_FREE(target);
+    char dir[512];
+    int16 len = project_path(dir,512);
+    strncat(dir,"assets/config/disburse.json",512-len);
+    cJSON *json = parser_json_from_file(dir);
     if (json != NULL) {
         cJSON *arr = cJSON_GetObjectItem(json, "disburse");
         int size = cJSON_GetArraySize(arr);
@@ -254,8 +254,10 @@ static void init() {
 }
 
 extern GtkWidget *note_widget() {
+    GtkWidget *box;
     GtkWidget *scroll;
     GtkWidget *scroll1;
+
 
     box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
@@ -263,11 +265,11 @@ extern GtkWidget *note_widget() {
     widget = gtk_flow_box_new();
     widget1 = gtk_flow_box_new();
     controller = gtk_stack_switcher_new();
-    scroll = gtk_scrolled_window_new(NULL,NULL);
-    scroll1 = gtk_scrolled_window_new(NULL,NULL);
+    scroll = gtk_scrolled_window_new(NULL, NULL);
+    scroll1 = gtk_scrolled_window_new(NULL, NULL);
 
-    gtk_container_add(GTK_CONTAINER(scroll),widget);
-    gtk_container_add(GTK_CONTAINER(scroll1),widget1);
+    gtk_container_add(GTK_CONTAINER(scroll), widget);
+    gtk_container_add(GTK_CONTAINER(scroll1), widget1);
 
     gtk_stack_add_titled(GTK_STACK(stack), scroll, "收入", "支出");
     gtk_stack_add_titled(GTK_STACK(stack), scroll1, "支出", "收入");
@@ -285,21 +287,22 @@ extern GtkWidget *note_widget() {
 
     return box;
 }
+
 static GtkWidget *dialog = NULL;
 
-extern  int show_note_dialog(){
+extern int show_note_dialog() {
 
     dialog = gtk_dialog_new();
     GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    gtk_container_add(GTK_CONTAINER(content_area),note_widget());
+    gtk_container_add(GTK_CONTAINER(content_area), note_widget());
 
     GtkWidget *header_bar = gtk_header_bar_new();
-    gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar),TRUE);
-    gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header_bar),controller);
+    gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
+    gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header_bar), controller);
 
-    gtk_window_set_resizable(GTK_WINDOW(dialog),FALSE);
-    gtk_window_set_titlebar(GTK_WINDOW(dialog),header_bar);
-    gtk_window_set_default_size(GTK_WINDOW(dialog),DEFAULT_WINDOW_WIDTH,DEFAULT_WIDOW_HEIGHT);
+    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+    gtk_window_set_titlebar(GTK_WINDOW(dialog), header_bar);
+    gtk_window_set_default_size(GTK_WINDOW(dialog), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
     gtk_widget_show_all(dialog);
     int result = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);

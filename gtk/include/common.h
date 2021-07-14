@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "env.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -21,6 +22,18 @@
 #define DEBUG "DEBUG"
 #define ERROR "ERROR"
 #define TRACE "TRACE"
+
+/********枚举当前环境*********/
+typedef enum {
+    /**
+     * 开发环境
+     */
+    DEV,
+    /**
+     * 生成环境
+     */
+    PROD
+} ENV;
 
 /**释放堆上内存**/
 #define X_FREE(p) free((void *)p); \

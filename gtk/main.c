@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "include/x.h"
+#include "include/sqlite3.h"
 #include "include/x_lite.h"
 
 /**
@@ -8,25 +9,25 @@
 static NavigatorItem navigators[] = {
         {
                 "明细",
-                "detail.png",
+                "/detail.png",
                 NULL,
                 HOME
         },
         {
                 "图表",
-                "form.png",
+                "/form.png",
                 NULL,
                 FORM
         },
         {
                 "社区",
-                "fortune.png",
+                "/fortune.png",
                 NULL,
                 FORTUNE
         },
         {
                 "我的",
-                "my.png",
+                "/my.png",
                 NULL,
                 PERSONAL
         }
@@ -79,7 +80,7 @@ static GtkWidget *controller() {
         gtk_stack_add_named((GtkStack *) stack, content, item->title);
         //加载图片信息
         if (item->icon != NULL) {
-            GdkPixbuf *buf = load_image_none_err(item->icon);
+            GdkPixbuf *buf = new_pix_buf_from_resource(item->icon);
             if (buf != NULL) {
                 GtkWidget *icon = gtk_image_new_from_pixbuf(buf);
                 gtk_button_set_image((GtkButton *) btn, icon);
@@ -96,7 +97,7 @@ static GtkWidget *controller() {
 static void open_note_dialog(GtkWidget *widget, gpointer *data) {
     gtk_widget_hide(GTK_WIDGET(window));
     int result = show_note_dialog();
-    printf("%d\n",result);
+    printf("%d\n", result);
     gtk_widget_show_all(GTK_WIDGET(window));
 }
 
@@ -118,7 +119,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_window_set_title(GTK_WINDOW (window), app_name);
     gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
-    gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
+
+    gtk_window_set_icon(GTK_WINDOW(window), new_pix_buf_from_resource("/logo.png"));
+
 
 
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
@@ -142,7 +145,19 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
 #include <time.h>
 
+sqlite3 *sqlite;
+
 int main(int argc, char **argv) {
+    char path[512];
+    memset(path,0,512);
+    int16  len = project_path(path,512);
+    strncat(path,"/data/xb.db",512-len);
+    int rs = sqlite3_open(path, &sqlite);
+    if (rs){
+        fprintf(stderr,"无法打开数据库文件:%s", sqlite3_errmsg(sqlite));
+        sqlite3_close(sqlite);
+        return 1;
+    }
     GtkApplication *app;
     int status;
 
@@ -150,6 +165,6 @@ int main(int argc, char **argv) {
     g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
     status = g_application_run(G_APPLICATION (app), argc, argv);
     g_object_unref(app);
-
+    sqlite3_close(sqlite);
     return status;
 }

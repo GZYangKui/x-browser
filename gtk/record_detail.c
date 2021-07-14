@@ -2,6 +2,7 @@
 // Created by yangkui on 2021/7/7.
 //
 
+#include "include/assets.h"
 #include "include/record_detail.h"
 
 static GtkWidget *pane,*date_picker;
@@ -26,7 +27,7 @@ static GtkWidget *override() {
     g_signal_connect(date_picker,"clicked",G_CALLBACK(open_date_pick),NULL);
     gtk_button_set_image(
             (GtkButton *) date_picker,
-            gtk_image_new_from_pixbuf(load_image_none_err("expand.png"))
+            gtk_image_new_from_pixbuf(new_pix_buf_from_resource("/expand.png"))
     );
     gtk_container_add(GTK_CONTAINER(box1), title);
     gtk_container_add(GTK_CONTAINER(box1), date_picker);

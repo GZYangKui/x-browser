@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <gresources>
-    <gresource>
+    <gresource prefix="">
+        <file alias="logo.png">assets/img/logo.png</file>
+        <file alias="detail.png">assets/img/detail.png</file>
+        <file alias="fee.png">assets/img/fee.png</file>
+        <file alias="fortune.png">assets/img/fortune.png</file>
+        <file alias="my.png">assets/img/my.png</file>
+        <file alias="form.png">assets/img/form.png</file>
+        <file alias="expand.png">assets/img/expand.png</file>
         <file alias="kw_clear.png">assets/img/kw/clear.png</file>
         <file alias="kw_style.css">assets/css/keyword.css</file>
-        <!--        <file compressed="true">dialog.ui</file>-->
-        <!--        <file preprocess="xml-stripblanks">menumarkup.xml</file>-->
-        <!--        <file alias="example.css">data/example.css</file>-->
     </gresource>
 </gresources>

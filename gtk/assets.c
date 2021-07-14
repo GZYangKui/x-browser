@@ -9,40 +9,33 @@ char *root_path = NULL;
 char *img_path = "/assets/img/";
 
 
-extern char *assets_root_path() {
-    if (root_path == NULL) {
-        char tem[512];
-        memset(tem, 0, 512);
-        getcwd(tem, sizeof(tem));
-        unsigned long len = strlen(tem);
-        //预留一位结束位
-        root_path = x_malloc(len + 1);
-        for (int i = 0; i < len; ++i) {
-            *(root_path + i) = tem[i];
+extern int16 project_path(char *buf, int size) {
+    char *dir = getcwd(buf, size);
+    if (dir == NULL) {
+        return -1;
+    }
+    int16 len = strlen(dir);
+    if (_ENV == DEV) {
+        for (int16 i = len - 1; i >= 0; --i) {
+            char c = *(dir + i);
+            if (c == '/') {
+                len = i + 1;
+                break;
+            } else {
+                *(dir + i) = '\0';
+            }
         }
-        *(root_path + len) = '\0';
     }
-    return root_path;
+    return len;
 }
 
-
-extern GdkPixbuf *load_image(char *filename, GError *errs) {
-    unsigned long len = strlen(img_path) + strlen(filename);
-    char path[len];
-    memset(path,0,len);
-    strcat(path, img_path);
-    strcat(path, filename);
-    char *des = str_link(assets_root_path(), path);
-    GdkPixbuf *pix_buf = gdk_pixbuf_new_from_file(des, &errs);
-    if (errs != NULL) {
-        printf("加载目标资源:[%s],发生错误:%s\n",filename,errs->message);
+extern GdkPixbuf *new_pix_buf_from_resource(char *id) {
+    GError *err = NULL;
+    GdkPixbuf *pb = gdk_pixbuf_new_from_resource(id, &err);
+    if (err != NULL) {
+        printf("加载资源文件失败:%s\n", err->message);
     }
-    X_FREE(des);
-    return pix_buf;
-}
-
-extern GdkPixbuf *load_image_none_err(char *filename) {
-    return load_image(filename, NULL);
+    return pb;
 }
 
 
