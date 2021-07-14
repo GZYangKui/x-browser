@@ -19,12 +19,6 @@ static NavigatorItem navigators[] = {
                 FORM
         },
         {
-                "记账",
-                "fee.png",
-                NULL,
-                NOTE
-        },
-        {
                 "社区",
                 "fortune.png",
                 NULL,
@@ -40,7 +34,7 @@ static NavigatorItem navigators[] = {
 
 string app_name = "鲨鱼记账";
 
-static GtkWidget *window, *header, *stack;
+static GtkWidget *window, *pane, *header, *center_box, *stack, *n_controller;
 
 static void nav_action(GtkWidget *widget, NavigatorItem *item) {
     if (item->content == NULL) {
@@ -75,9 +69,6 @@ static GtkWidget *controller() {
             case FORTUNE:
                 content = ft_widget();
                 break;
-            case NOTE:
-                content = note_widget();
-                break;
             case PERSONAL:
                 content = my_widget();
                 break;
@@ -102,25 +93,31 @@ static GtkWidget *controller() {
     return btn_box;
 }
 
-static void header_move(GtkWidget *widget, gpointer *data) {
-    printf("点击\n");
+static void open_note_dialog(GtkWidget *widget, gpointer *data) {
+    gtk_widget_hide(GTK_WIDGET(window));
+    int result = show_note_dialog();
+    printf("%d\n",result);
+    gtk_widget_show_all(GTK_WIDGET(window));
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
     //注册资源
     x_get_resource();
 
-    GtkWidget *pane, *center_box;
-
     //窗口相关设置
     stack = gtk_stack_new();
+    n_controller = controller();
     header = gtk_header_bar_new();
     window = gtk_application_window_new(app);
     center_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
 
+    GtkWidget *note = gtk_button_new_with_label("记账");
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header), note);
+    g_signal_connect(note, "clicked", G_CALLBACK(open_note_dialog), NULL);
+
     gtk_window_set_title(GTK_WINDOW (window), app_name);
-    gtk_window_set_default_size(GTK_WINDOW (window), 400, 700);
+    gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
     gtk_window_set_icon(GTK_WINDOW(window), load_image_none_err("logo.png"));
 
 
@@ -129,7 +126,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
 
     gtk_container_add(GTK_CONTAINER(center_box), stack);
-    gtk_container_add(GTK_CONTAINER(center_box), controller());
+    gtk_container_add(GTK_CONTAINER(center_box), n_controller);
 
 
     gtk_container_add(GTK_CONTAINER(pane), center_box);

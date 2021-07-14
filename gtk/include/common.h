@@ -12,6 +12,10 @@
 #define TRUE 1
 #define FALSE 0
 
+/************默认窗口宽度和高度************/
+#define DEFAULT_WINDOW_WIDTH 400
+#define DEFAULT_WIDOW_HEIGHT 700
+
 /******日志输出等级*******/
 #define INFO "INFO"
 #define DEBUG "DEBUG"

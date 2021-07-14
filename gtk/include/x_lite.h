@@ -16,7 +16,6 @@
 typedef enum {
     HOME = 1,
     FORM,
-    NOTE,
     FORTUNE,
     PERSONAL
 } NavigatorItemMeta;

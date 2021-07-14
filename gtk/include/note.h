@@ -14,7 +14,9 @@ typedef struct {
     char *icon;
 } NoteItem;
 
-extern GtkWidget *note_widget();
-
+/**
+ * 显示对话框
+ */
+extern int show_note_dialog();
 
 #endif //X_LITE_NOTE_H
