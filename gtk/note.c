@@ -38,11 +38,14 @@ static const char *keywords[] = {
 static void calculate() {
     const char *text = gtk_label_get_label(GTK_LABEL(money));
     int index = -1;
+    //运算规则 1(+) -1(-)
+    int opera = 1;
     int16 len = strlen(text);
     for (int i = 0; i < len; ++i) {
         char temp = *(text + i);
         if (temp == '+' || temp == '-') {
             index = i;
+            opera = (temp == '+') ? 1 : -1;
             break;
         }
     }
@@ -66,10 +69,12 @@ static void calculate() {
     double af = atof(a);
     double bf = atof(b);
 
-    printf("a = %lf\n", af);
-    printf("b = %lf\n", bf);
-
-    double total = af + bf;
+    double total;
+    if (opera == 1) {
+        total = af + bf;
+    } else {
+        total = af - bf;
+    }
 
     char t[64];
 
@@ -101,16 +106,20 @@ static gboolean is_ct(f_string str) {
  * 判断是否运算符
  */
 static gboolean is_opera(const char *str) {
-    return *str == '+' || *str == '-';
+    return strcmp(str, "+") == 0 || strcmp(str, "-") == 0;
 }
 
 static gboolean has_opera(const char *text) {
     int16 len = strlen(text);
-    if (len == 0) {
-        return FALSE;
+    gboolean rs = FALSE;
+    for (int i = len - 1; i >= 0; --i) {
+        char k = *(text + i);
+        if (k == '+' || k == '-') {
+            rs = TRUE;
+            break;
+        }
     }
-    const char *c = text + len - 1;
-    return is_opera(c);
+    return rs;
 }
 
 static gboolean can_add_dot() {
@@ -150,11 +159,12 @@ static void k_clicked(GtkWidget *btn, const char *data) {
     }
     //判断是否可以添加操作符号(+/-)
     if (is_opera(data) && !zero) {
-        if (!has_opera(text)) {
-            strcat(new_text, data);
-        } else {
+        if (has_opera(text)) {
             calculate();
+            return;
         }
+        strcat(new_text, data);
+
     } else {
         if (!zero) {
             gboolean rs = TRUE;
