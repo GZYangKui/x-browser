@@ -10,9 +10,12 @@
 #include <stdlib.h>
 #include "env.h"
 
+#ifndef TRUE
 #define TRUE 1
+#endif
+#ifndef FALSE
 #define FALSE 0
-
+#endif
 /************默认窗口宽度和高度************/
 #define DEFAULT_WINDOW_WIDTH 400
 #define DEFAULT_WIDOW_HEIGHT 700

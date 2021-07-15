@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "include/x.h"
+#include <pthread.h>
 #include "include/sqlite3.h"
 #include "include/x_lite.h"
 
@@ -101,7 +102,24 @@ static void open_note_dialog(GtkWidget *widget, gpointer *data) {
     gtk_widget_show_all(GTK_WIDGET(window));
 }
 
+
+void *test(void *param) {
+    printf("多线程\n");
+    pthread_t _self = pthread_self();
+    printf("%ld\n", _self);
+    gtk_window_set_title(GTK_WINDOW(window), "测试");
+    return NULL;
+}
+
+void bake_cake_thread(GTask *task,
+                      gpointer source_object,
+                      gpointer task_data,
+                      GCancellable *cancellable) {
+    printf("测试\n");
+}
+
 static void activate(GtkApplication *app, gpointer user_data) {
+
     //注册资源
     x_get_resource();
 
@@ -123,7 +141,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_window_set_icon(GTK_WINDOW(window), new_pix_buf_from_resource("/logo.png"));
 
 
-
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
     gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
@@ -141,30 +158,41 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_widget_show_all(window);
 
+    GTask *task = g_task_new(NULL, NULL, NULL, NULL);
+    g_task_run_in_thread(task, bake_cake_thread);
+    printf("%p\n", task);
 }
-
-#include <time.h>
 
 sqlite3 *sqlite;
 
-int main(int argc, char **argv) {
+/**
+ * 检查数据库文件是否存在
+ *
+ */
+int check_db() {
     char path[512];
-    memset(path,0,512);
-    int16  len = project_path(path,512);
-    strncat(path,"/data/xb.db",512-len);
+    memset(path, 0, 512);
+    int16 len = project_path(path, 512);
+    strncat(path, "/data/xb.db", 512 - len);
     int rs = sqlite3_open(path, &sqlite);
-    if (rs){
-        fprintf(stderr,"无法打开数据库文件:%s", sqlite3_errmsg(sqlite));
+    if (rs) {
+        fprintf(stderr, "无法打开数据库文件:%s", sqlite3_errmsg(sqlite));
         sqlite3_close(sqlite);
-        return 1;
     }
-    GtkApplication *app;
-    int status;
+    return rs;
+}
 
-    app = gtk_application_new("cn.navigational.x-browser", G_APPLICATION_CAN_OVERRIDE_APP_ID);
-    g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
-    status = g_application_run(G_APPLICATION (app), argc, argv);
-    g_object_unref(app);
-    sqlite3_close(sqlite);
-    return status;
+
+int main(int argc, char **argv) {
+//    if (check_db()) {
+//        return 1;
+//    }
+//    GtkApplication *app;
+//    int status;
+//    app = gtk_application_new("cn.navigational.x-browser", G_APPLICATION_CAN_OVERRIDE_APP_ID);
+//    g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
+//    status = g_application_run(G_APPLICATION (app), argc, argv);
+//    g_object_unref(app);
+//    sqlite3_close(sqlite);
+//    return status;
 }

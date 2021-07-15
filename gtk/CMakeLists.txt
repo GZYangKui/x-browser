@@ -19,11 +19,11 @@ CONFIGURE_FILE(
 
 find_package(PkgConfig REQUIRED)
 
+find_package(Threads REQUIRED)
+
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
 include_directories("${GTK3_INCLUDE_DIRS}")
-
-list(APPEND GTK_LIBS ${GTK3_LIBRARIES})
 
 if (LINUX)
     set(EXT_LIBS "${PROJECT_SOURCE_DIR}/lib/linux")
@@ -47,9 +47,10 @@ aux_source_directory(./include PROJECT_INCLUDE)
 add_executable(Demo ${DIR_SRCS} ${PROJECT_INCLUDE})
 
 
+target_include_directories(Demo PUBLIC "${PROJECT_BINARY_DIR}")
+
 #添加链接库
 link_directories(${EXT_LIBS})
 target_link_libraries(Demo Util)
-target_link_libraries(Demo ${GTK_LIBS} sqlite3)
 target_link_libraries(Demo /usr/lib/x86_64-linux-gnu/libm.so)
-target_include_directories(Demo PUBLIC "${PROJECT_BINARY_DIR}")
+target_link_libraries(Demo ${GTK3_LIBRARIES} sqlite3 Threads::Threads)

@@ -189,7 +189,8 @@ static GtkWidget *keyword() {
         GtkWidget *btn = gtk_button_new_with_label(name);
         if (strcmp(name, "x") == 0) {
             btn = gtk_button_new();
-            gtk_button_set_image(GTK_BUTTON(btn), gtk_image_new_from_pixbuf(new_pix_buf_from_resource("/kw_clear.png")));
+            gtk_button_set_image(GTK_BUTTON(btn),
+                                 gtk_image_new_from_pixbuf(new_pix_buf_from_resource("/kw_clear.png")));
             gtk_button_set_always_show_image(GTK_BUTTON(btn), TRUE);
         }
         gtk_widget_set_hexpand(btn, TRUE);
@@ -218,7 +219,7 @@ static GtkWidget *get_inner_box() {
     gtk_container_add(GTK_CONTAINER(inner_box), grid);
 
     GtkCssProvider *provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_resource(provider, "kw_style.css");
+    gtk_css_provider_load_from_resource(provider, "/kw_style.css");
     gtk_style_context_add_provider(
             gtk_widget_get_style_context(inner_box),
             GTK_STYLE_PROVIDER(provider),
@@ -235,8 +236,8 @@ static void item_select(GtkWidget *btn, NoteItem *item) {
 
 static void init() {
     char dir[512];
-    int16 len = project_path(dir,512);
-    strncat(dir,"assets/config/disburse.json",512-len);
+    int16 len = project_path(dir, 512);
+    strncat(dir, "assets/config/disburse.json", 512 - len);
     cJSON *json = parser_json_from_file(dir);
     if (json != NULL) {
         cJSON *arr = cJSON_GetObjectItem(json, "disburse");
@@ -290,8 +291,11 @@ extern GtkWidget *note_widget() {
 
 static GtkWidget *dialog = NULL;
 
-extern int show_note_dialog() {
+int sum(int a, int b) {
+    return a+b;
+}
 
+extern int show_note_dialog() {
     dialog = gtk_dialog_new();
     GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     gtk_container_add(GTK_CONTAINER(content_area), note_widget());
