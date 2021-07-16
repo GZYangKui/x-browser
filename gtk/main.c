@@ -118,7 +118,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header), note);
     g_signal_connect(note, "clicked", G_CALLBACK(open_note_dialog), NULL);
 
-    gtk_window_set_title(GTK_WINDOW (window), app_name);
     gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
 
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
@@ -148,28 +147,11 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_show_all(window);
 }
 
-sqlite3 *sqlite;
-
-/**
- * 检查数据库文件是否存在
- *
- */
-int check_db() {
-    char path[512];
-    memset(path, 0, 512);
-    int16 len = project_path(path, 512);
-    strncat(path, "/data/xb.db", 512 - len);
-    int rs = sqlite3_open(path, &sqlite);
-    if (rs) {
-        fprintf(stderr, "无法打开数据库文件:%s", sqlite3_errmsg(sqlite));
-        sqlite3_close(sqlite);
-    }
-    return rs;
-}
-
+int xd_check();
+void xd_stop();
 
 int main(int argc, char **argv) {
-    if (check_db()) {
+    if (xd_check()) {
         return 1;
     }
     GtkApplication *app;
@@ -178,6 +160,8 @@ int main(int argc, char **argv) {
     g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
     status = g_application_run(G_APPLICATION (app), argc, argv);
     g_object_unref(app);
-    sqlite3_close(sqlite);
+    //stop sqlite3
+    xd_stop();
+
     return status;
 }
