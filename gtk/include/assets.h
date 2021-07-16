@@ -12,7 +12,7 @@
  * 获取资源根路径
  *
  */
-extern int16 project_path(char *buf,int size);
+extern int16 project_path(char *buf, int size);
 
 /**
  *
@@ -21,6 +21,10 @@ extern int16 project_path(char *buf,int size);
  */
 extern GdkPixbuf *new_pix_buf_from_resource(char *id);
 
+/**
+ * 加载资源列表
+ */
+extern GList *new_pix_buf_list_from_resource(int size, ...);
 
 
 #endif //X_LITE_ASSETS_H

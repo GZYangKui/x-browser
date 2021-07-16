@@ -97,25 +97,8 @@ static GtkWidget *controller() {
 
 static void open_note_dialog(GtkWidget *widget, gpointer *data) {
     gtk_widget_hide(GTK_WIDGET(window));
-    int result = show_note_dialog();
-    printf("%d\n", result);
+    show_note_dialog();
     gtk_widget_show_all(GTK_WIDGET(window));
-}
-
-
-void *test(void *param) {
-    printf("多线程\n");
-    pthread_t _self = pthread_self();
-    printf("%ld\n", _self);
-    gtk_window_set_title(GTK_WINDOW(window), "测试");
-    return NULL;
-}
-
-void bake_cake_thread(GTask *task,
-                      gpointer source_object,
-                      gpointer task_data,
-                      GCancellable *cancellable) {
-    printf("测试\n");
 }
 
 static void activate(GtkApplication *app, gpointer user_data) {
@@ -138,9 +121,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_window_set_title(GTK_WINDOW (window), app_name);
     gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
 
-    gtk_window_set_icon(GTK_WINDOW(window), new_pix_buf_from_resource("/logo.png"));
-
-
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
     gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
     gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
@@ -156,11 +136,16 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_window_set_titlebar(GTK_WINDOW(window), header);
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
-    gtk_widget_show_all(window);
+    GList *icons = new_pix_buf_list_from_resource(
+            3,
+            "/logo.png",
+            "/logo@2x.png",
+            "/logo@3x.png"
+    );
+    gtk_window_set_icon_list(GTK_WINDOW(window), icons);
+    g_list_free(icons);
 
-    GTask *task = g_task_new(NULL, NULL, NULL, NULL);
-    g_task_run_in_thread(task, bake_cake_thread);
-    printf("%p\n", task);
+    gtk_widget_show_all(window);
 }
 
 sqlite3 *sqlite;
@@ -184,15 +169,15 @@ int check_db() {
 
 
 int main(int argc, char **argv) {
-//    if (check_db()) {
-//        return 1;
-//    }
-//    GtkApplication *app;
-//    int status;
-//    app = gtk_application_new("cn.navigational.x-browser", G_APPLICATION_CAN_OVERRIDE_APP_ID);
-//    g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
-//    status = g_application_run(G_APPLICATION (app), argc, argv);
-//    g_object_unref(app);
-//    sqlite3_close(sqlite);
-//    return status;
+    if (check_db()) {
+        return 1;
+    }
+    GtkApplication *app;
+    int status;
+    app = gtk_application_new("cn.navigational.x-browser", G_APPLICATION_CAN_OVERRIDE_APP_ID);
+    g_signal_connect (app, "activate", G_CALLBACK(activate), NULL);
+    status = g_application_run(G_APPLICATION (app), argc, argv);
+    g_object_unref(app);
+    sqlite3_close(sqlite);
+    return status;
 }

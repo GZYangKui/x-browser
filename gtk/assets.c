@@ -38,5 +38,18 @@ extern GdkPixbuf *new_pix_buf_from_resource(char *id) {
     return pb;
 }
 
+extern GList *new_pix_buf_list_from_resource(int size, ...) {
+    va_list arg_ptr;
+    GList *list = NULL;
+    va_start(arg_ptr, size);
+    for (int i = 0; i < size; ++i) {
+        char *id = va_arg(arg_ptr, char *);
+        GdkPixbuf *pix_buf = new_pix_buf_from_resource(id);
+        list = g_list_append(list, pix_buf);
+    }
+    va_end(arg_ptr);
+    return list;
+}
+
 
 
