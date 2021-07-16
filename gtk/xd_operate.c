@@ -24,3 +24,31 @@ extern void xd_stop() {
     }
     sqlite3_close(sqlite);
 }
+
+static int callback(void **list, int num, char **values, char **cols) {
+    FeeCategory *category = x_malloc(sizeof(FeeCategory));
+
+    category->id = atoi(*values);
+    category->type = atoi(*(values + 1));
+    category->name = str_malloc_cpy(*(values + 2));
+    category->icon = str_malloc_cpy(*(values + 3));
+    category->show = atoi(*(values + 4));
+    category->createTime = atoi(*(values + 5));
+
+    *list = g_list_append(*list, category);
+
+    return 0;
+}
+
+extern GList *ex_cate() {
+    char *sql = "SELECT * FROM category WHERE show=1";
+    GList *list = NULL;
+    char *err_msg = NULL;
+    printf("%p\n", &list);
+    sqlite3_exec(sqlite, sql, (int (*)(void *, int, char **, char **)) callback, &list, &err_msg);
+    if (err_msg != NULL) {
+        printf("执行sql出错:%s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+    return list;
+}

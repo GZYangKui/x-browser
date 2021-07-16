@@ -4,6 +4,7 @@
         <file alias="logo.png">assets/img/logo.png</file>
         <file alias="logo@2x.png">assets/img/logo@2x.png</file>
         <file alias="logo@3x.png">assets/img/logo@3x.png</file>
+        <file alias="cate_gift.png">assets/img/cate/gift.png</file>
         <file alias="detail.png">assets/img/detail.png</file>
         <file alias="fee.png">assets/img/fee.png</file>
         <file alias="fortune.png">assets/img/fortune.png</file>

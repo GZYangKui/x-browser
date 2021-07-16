@@ -6,6 +6,7 @@
 #include "include/assets.h"
 #include "include/sqlite3.h"
 #include "include/string_util.h"
+#include "include/xd_operate.h"
 
 #define ZERO "0.00"
 
@@ -234,25 +235,26 @@ static void item_select(GtkWidget *btn, NoteItem *item) {
 }
 
 
-static void init() {
-    char dir[512];
-    int16 len = project_path(dir, 512);
-    strncat(dir, "assets/config/disburse.json", 512 - len);
-    cJSON *json = parser_json_from_file(dir);
-    if (json != NULL) {
-        cJSON *arr = cJSON_GetObjectItem(json, "disburse");
-        int size = cJSON_GetArraySize(arr);
-        for (int i = 0; i < size; ++i) {
-            cJSON *item = cJSON_GetArrayItem(arr, i);
-            NoteItem *n_item = x_malloc(sizeof(NoteItem));
-            n_item->name = cJSON_GetObjectItem(item, "name")->valuestring;
-            GtkWidget *btn = gtk_button_new_with_label(n_item->name);
-            gtk_flow_box_insert((GtkFlowBox *) widget, btn, -1);
-            g_signal_connect(btn, "clicked", G_CALLBACK(item_select), n_item);
-        }
+static void update_item(FeeCategory *item, gpointer user_data) {
+    GtkWidget *btn = gtk_button_new_with_label(item->name);
+    GtkWidget *image = gtk_image_new_from_pixbuf(new_pix_buf_from_resource(item->icon));
+    gtk_button_set_image(GTK_BUTTON(btn), image);
+    gtk_button_set_image_position(GTK_BUTTON(btn),GTK_POS_TOP);
+    gtk_button_set_always_show_image(GTK_BUTTON(btn),TRUE);
+    if (item->type == 0) {
+        gtk_container_add(GTK_CONTAINER(widget), btn);
+    } else {
+        gtk_container_add(GTK_CONTAINER(widget1), btn);
     }
-    X_FREE(json);
+    FREE_FEE_CATEGORY(item);
 }
+
+static void load_cate_item(){
+    GList *list = ex_cate();
+    g_list_foreach(list, (GFunc) update_item, NULL);
+    g_list_free(list);
+}
+
 
 extern GtkWidget *note_widget() {
     GtkWidget *box;
@@ -284,16 +286,15 @@ extern GtkWidget *note_widget() {
 
     gtk_widget_set_halign(controller, GTK_ALIGN_CENTER);
 
-    init();
+
+    load_cate_item();
+
 
     return box;
 }
 
 static GtkWidget *dialog = NULL;
 
-int sum(int a, int b) {
-    return a+b;
-}
 
 extern int show_note_dialog() {
     dialog = gtk_dialog_new();
