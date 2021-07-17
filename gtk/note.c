@@ -36,6 +36,15 @@ static const char *keywords[] = {
         "完成"
 };
 
+GtkWidget *scroll;
+GtkWidget *scroll1;
+
+static GtkWidget *box = NULL;
+static GtkWidget *dialog = NULL;
+static gboolean show_kw = FALSE;
+static GtkWidget *inner_box = NULL;
+
+
 static void calculate() {
     const char *text = gtk_label_get_label(GTK_LABEL(money));
     int index = -1;
@@ -180,8 +189,7 @@ static void k_clicked(GtkWidget *btn, const char *data) {
     gtk_label_set_label(GTK_LABEL(money), new_text);
 }
 
-static GtkWidget *keyword() {
-
+static GtkWidget *get_keyword() {
     GtkWidget *grid = gtk_grid_new();
     for (int i = 0; i < 16; ++i) {
         int row = i / 4;
@@ -203,7 +211,7 @@ static GtkWidget *keyword() {
 
 static GtkWidget *get_inner_box() {
     money = gtk_label_new(ZERO);
-    inner_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+    GtkWidget *_inner_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
     GtkWidget *box1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *label = gtk_label_new("备注");
@@ -214,24 +222,31 @@ static GtkWidget *get_inner_box() {
     gtk_container_add(GTK_CONTAINER(box1), entry);
     gtk_container_add(GTK_CONTAINER(box1), money);
 
-    GtkWidget *grid = keyword();
-    gtk_widget_set_hexpand(grid, TRUE);
-    gtk_container_add(GTK_CONTAINER(inner_box), box1);
-    gtk_container_add(GTK_CONTAINER(inner_box), grid);
+    GtkWidget *keyword = get_keyword();
+    gtk_widget_set_hexpand(keyword, TRUE);
+    gtk_container_add(GTK_CONTAINER(_inner_box), box1);
+    gtk_container_add(GTK_CONTAINER(_inner_box), keyword);
 
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_resource(provider, "/kw_style.css");
     gtk_style_context_add_provider(
-            gtk_widget_get_style_context(inner_box),
+            gtk_widget_get_style_context(_inner_box),
             GTK_STYLE_PROVIDER(provider),
             GTK_STYLE_PROVIDER_PRIORITY_FALLBACK
     );
 
-    return inner_box;
+    return _inner_box;
 }
 
-static void item_select(GtkWidget *btn, NoteItem *item) {
+static void item_select(GtkWidget *btn, FeeCategory *item) {
     printf("name:%s\n", item->name);
+    if (show_kw == TRUE) {
+        return;
+    }
+    gtk_container_remove(GTK_CONTAINER(box), inner_box);
+    gtk_container_add(GTK_CONTAINER(box), inner_box);
+    gtk_widget_show_all(box);
+    show_kw = TRUE;
 }
 
 
@@ -239,37 +254,43 @@ static void update_item(FeeCategory *item, gpointer user_data) {
     GtkWidget *btn = gtk_button_new_with_label(item->name);
     GtkWidget *image = gtk_image_new_from_pixbuf(new_pix_buf_from_resource(item->icon));
     gtk_button_set_image(GTK_BUTTON(btn), image);
-    gtk_button_set_image_position(GTK_BUTTON(btn),GTK_POS_TOP);
-    gtk_button_set_always_show_image(GTK_BUTTON(btn),TRUE);
+    gtk_button_set_image_position(GTK_BUTTON(btn), GTK_POS_TOP);
+    gtk_button_set_always_show_image(GTK_BUTTON(btn), TRUE);
     if (item->type == 0) {
         gtk_container_add(GTK_CONTAINER(widget), btn);
     } else {
         gtk_container_add(GTK_CONTAINER(widget1), btn);
     }
-    FREE_FEE_CATEGORY(item);
+    g_signal_connect(btn, "clicked", G_CALLBACK(item_select), item);
 }
 
-static void load_cate_item(){
-    GList *list = ex_cate();
-    g_list_foreach(list, (GFunc) update_item, NULL);
-    g_list_free(list);
+static void switcher_changed(GtkWidget *switcher, gpointer *user_data) {
+    if (show_kw == FALSE) {
+        return;
+    }
+    g_object_ref(inner_box);
+    gtk_container_remove(GTK_CONTAINER(box), inner_box);
+    show_kw = FALSE;
 }
 
+static GList *list = NULL;
 
 extern GtkWidget *note_widget() {
-    GtkWidget *box;
-    GtkWidget *scroll;
-    GtkWidget *scroll1;
 
-
-    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    GtkWidget *_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
     stack = gtk_stack_new();
+    inner_box = get_inner_box();
     widget = gtk_flow_box_new();
     widget1 = gtk_flow_box_new();
     controller = gtk_stack_switcher_new();
     scroll = gtk_scrolled_window_new(NULL, NULL);
     scroll1 = gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_widget_set_valign(widget, GTK_ALIGN_START);
+    gtk_widget_set_halign(widget, GTK_ALIGN_FILL);
+    gtk_widget_set_valign(widget1, GTK_ALIGN_START);
+    gtk_widget_set_halign(widget1, GTK_ALIGN_FILL);
 
     gtk_container_add(GTK_CONTAINER(scroll), widget);
     gtk_container_add(GTK_CONTAINER(scroll1), widget1);
@@ -279,27 +300,40 @@ extern GtkWidget *note_widget() {
 
 
     gtk_stack_switcher_set_stack(GTK_STACK_SWITCHER(controller), GTK_STACK(stack));
+    g_signal_connect(stack, "notify::visible-child", G_CALLBACK(switcher_changed), NULL);
 
-    gtk_container_add(GTK_CONTAINER(box), stack);
-    gtk_container_add(GTK_CONTAINER(box), get_inner_box());
+
+    gtk_container_add(GTK_CONTAINER(_box), stack);
     gtk_widget_set_vexpand(GTK_WIDGET(stack), TRUE);
 
     gtk_widget_set_halign(controller, GTK_ALIGN_CENTER);
 
 
-    load_cate_item();
+    list = ex_cate();
+    g_list_foreach(list, (GFunc) update_item, NULL);
 
-
-    return box;
+    return _box;
 }
 
-static GtkWidget *dialog = NULL;
-
+static void dispose(){
+    if (list==NULL){
+        return;
+    }
+    int16 len = g_list_length(list);
+    for (int i = 0; i <len ; ++i) {
+        FeeCategory *category = g_list_nth_data(list,i);
+        FREE_FEE_CATEGORY(category);
+    }
+    g_list_free(list);
+    list = NULL;
+}
 
 extern int show_note_dialog() {
+    show_kw = FALSE;
+    box = note_widget();
     dialog = gtk_dialog_new();
     GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    gtk_container_add(GTK_CONTAINER(content_area), note_widget());
+    gtk_container_add(GTK_CONTAINER(content_area), box);
 
     GtkWidget *header_bar = gtk_header_bar_new();
     gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
@@ -310,6 +344,7 @@ extern int show_note_dialog() {
     gtk_window_set_default_size(GTK_WINDOW(dialog), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
     gtk_widget_show_all(dialog);
     int result = gtk_dialog_run(GTK_DIALOG(dialog));
+    dispose();
     gtk_widget_destroy(dialog);
     return result;
 }
