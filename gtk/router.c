@@ -13,13 +13,14 @@ typedef struct {
     GtkWidget *headerBar;
 } PopupAndPopRouter;
 
+typedef struct _RouterStackFrame RouterStackFrame;
 
 /**
  * 自定路由栈结构
  */
-struct RouterStackFrame {
-    struct RouterStackFrame *pre;
-    struct RouterStackFrame *next;
+struct _RouterStackFrame {
+     RouterStackFrame *pre;
+     RouterStackFrame *next;
     //路由缓存数据
     PopupAndPopRouter *router;
 };
@@ -28,11 +29,12 @@ static GtkWindow *window = NULL;
 /**
  * 栈顶
  */
-static struct RouterStackFrame *top_stack = NULL;
+static  RouterStackFrame *top_stack = NULL;
 
 extern void navigate_to(Router *router) {
-    struct RouterStackFrame *frame = x_malloc(sizeof(struct RouterStackFrame));
+    RouterStackFrame *frame = x_malloc(sizeof(RouterStackFrame));
     PopupAndPopRouter *pp_router = x_malloc(sizeof(PopupAndPopRouter));
+
     pp_router->router = router;
     pp_router->widget = router->widget();
     pp_router->headerBar = router->headerBar();
