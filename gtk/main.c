@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include "include/sqlite3.h"
 #include "include/x_lite.h"
+#include "include/router.h"
 
 /**
  * 初始化底部导航栏
@@ -148,6 +149,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 }
 
 int xd_check();
+
 void xd_stop();
 
 int main(int argc, char **argv) {
@@ -164,4 +166,5 @@ int main(int argc, char **argv) {
     xd_stop();
 
     return status;
+
 }
