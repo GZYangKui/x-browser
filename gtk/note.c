@@ -315,6 +315,18 @@ extern GtkWidget *note_widget() {
     return _box;
 }
 
+
+static void open_setting(GtkWidget *setting,gpointer *user_data){
+//    GtkWidget *window = gtk_dialog_new();
+
+   // gtk_widget_set_visible(dialog,FALSE);
+
+//    gtk_widget_show_all(window);
+//    gtk_dialog_run(GTK_DIALOG(window));
+//
+//    gtk_widget_set_visible(dialog,TRUE);
+}
+
 static void dispose(){
     if (list==NULL){
         return;
@@ -336,8 +348,11 @@ extern int show_note_dialog() {
     gtk_container_add(GTK_CONTAINER(content_area), box);
 
     GtkWidget *header_bar = gtk_header_bar_new();
+    GtkWidget *setting = gtk_button_new_with_label("设置");
     gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
     gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header_bar), controller);
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), setting);
+    g_signal_connect(setting,"clicked",G_CALLBACK(open_setting),NULL);
 
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
     gtk_window_set_titlebar(GTK_WINDOW(dialog), header_bar);
