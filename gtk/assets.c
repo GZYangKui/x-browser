@@ -51,5 +51,15 @@ extern GList *new_pix_buf_list_from_resource(int size, ...) {
     return list;
 }
 
+extern GtkCssProvider *register_css_context(GtkWidget *widget,char *filename,gint prior){
+    GtkCssProvider *provider = gtk_css_provider_new();
+
+    gtk_css_provider_load_from_resource(provider,filename);
+
+    gtk_style_context_add_provider(gtk_widget_get_style_context(widget),GTK_STYLE_PROVIDER(provider),prior);
+
+    return provider;
+}
+
 
 

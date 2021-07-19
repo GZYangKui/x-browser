@@ -17,6 +17,6 @@ typedef struct {
 /**
  * 显示对话框
  */
-extern int show_note_dialog();
+extern void navigate_to_note();
 
 #endif //X_LITE_NOTE_H

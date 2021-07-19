@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "env.h"
+#include "router.h"
 
 #ifndef TRUE
 #define TRUE 1

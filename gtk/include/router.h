@@ -32,8 +32,6 @@ typedef struct {
 } RouterParam;
 
 struct _Router {
-    //路由路径
-    char *path;
     //路由名称
     char *title;
     //入栈成功回调
@@ -52,19 +50,25 @@ struct _Router {
 /**
  * 自定义宏用于生成包含指定数量参数Router对象
  */
-#define new_navigate_router(len) (Router *)x_malloc(sizeof(Router)+((len)*sizeof(RouterParam)))
+#define new_navigate_router(router, len) router = (Router *)x_malloc(sizeof(Router)+((len)*sizeof(RouterParam))); \
+        (router)->widget= NULL;                                                                                   \
+        (router)->headerBar=NULL;                                                                                \
+        (router)->onSuccess=NULL;                                                                                \
+        (router)->onFailed=NULL;                                                                                 \
+        (router)->title = NULL
 
 /**
  *
  * 导航到某个页面
  *
  */
+
 extern void navigate_to(Router *router);
 
 /**
  * 重定向到某个页面并清除之前页面
  */
-extern void redirect_to(Router router);
+extern void redirect_to(Router *router);
 
 /**
  *
@@ -78,6 +82,6 @@ extern void navigate_back(int delta);
  * 初始化最外层窗口对象
  *
  */
-extern void navigate_window(GtkWindow *widow);
+extern void navigate_window(GtkWindow *widow,gboolean show_nav_bar);
 
 #endif //X_LITE_ROUTER_H

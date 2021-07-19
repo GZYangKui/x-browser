@@ -26,5 +26,10 @@ extern GdkPixbuf *new_pix_buf_from_resource(char *id);
  */
 extern GList *new_pix_buf_list_from_resource(int size, ...);
 
+/**
+ * 注册css context到指定GtkWidget上
+ */
+extern GtkCssProvider *register_css_context(GtkWidget *widget,char *filename,gint prior);
+
 
 #endif //X_LITE_ASSETS_H

@@ -13,5 +13,9 @@
         <file alias="expand.png">assets/img/expand.png</file>
         <file alias="kw_clear.png">assets/img/kw/clear.png</file>
         <file alias="kw_style.css">assets/css/keyword.css</file>
+        <file alias="nav_style.css">assets/css/nav_style.css</file>
+        <file alias="nav_back.png">assets/img/nav/back.png</file>
+        <file alias="nav_home.png">assets/img/nav/home.png</file>
+        <file alias="nav_func.png">assets/img/nav/func.png</file>
     </gresource>
 </gresources>

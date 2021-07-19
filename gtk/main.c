@@ -97,33 +97,20 @@ static GtkWidget *controller() {
 }
 
 static void open_note_dialog(GtkWidget *widget, gpointer *data) {
-    gtk_widget_hide(GTK_WIDGET(window));
-    show_note_dialog();
-    gtk_widget_show_all(GTK_WIDGET(window));
+    navigate_to_note();
+//    gtk_widget_hide(GTK_WIDGET(window));
+//    show_note_dialog();
+//    gtk_widget_show_all(GTK_WIDGET(window));
 }
 
-static void activate(GtkApplication *app, gpointer user_data) {
-
-    //注册资源
-    x_get_resource();
-
+static GtkWidget *main_pane() {
     //窗口相关设置
     stack = gtk_stack_new();
     n_controller = controller();
-    header = gtk_header_bar_new();
-    window = gtk_application_window_new(app);
     center_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
 
-    GtkWidget *note = gtk_button_new_with_label("记账");
-    gtk_header_bar_pack_start(GTK_HEADER_BAR(header), note);
-    g_signal_connect(note, "clicked", G_CALLBACK(open_note_dialog), NULL);
-
-    gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
-
     gtk_widget_set_vexpand(GTK_WIDGET(stack), 1);
-    gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
-    gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
 
     gtk_container_add(GTK_CONTAINER(center_box), stack);
     gtk_container_add(GTK_CONTAINER(center_box), n_controller);
@@ -131,9 +118,43 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     gtk_container_add(GTK_CONTAINER(pane), center_box);
 
-    gtk_container_add(GTK_CONTAINER(window), pane);
-    //自定义title bar
-    gtk_window_set_titlebar(GTK_WINDOW(window), header);
+    return pane;
+}
+
+static GtkWidget *main_header_bar(){
+    header = gtk_header_bar_new();
+    GtkWidget *note = gtk_button_new_with_label("记账");
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header), note);
+    gtk_header_bar_set_title((GtkHeaderBar *) header, app_name);
+    gtk_header_bar_set_show_close_button((GtkHeaderBar *) header, TRUE);
+
+    g_signal_connect(note, "clicked", G_CALLBACK(open_note_dialog), NULL);
+
+    return header;
+}
+
+static void activate(GtkApplication *app, gpointer user_data) {
+
+    //注册资源
+    x_get_resource();
+
+
+    window = gtk_application_window_new(app);
+    gtk_window_set_default_size(GTK_WINDOW (window), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
+
+
+    navigate_window(GTK_WINDOW(window),TRUE);
+
+    Router *router;
+    new_navigate_router(router,0);
+    router->title = "鲨鱼记账";
+    router->widget = main_pane;
+    router->headerBar = main_header_bar;
+
+
+    navigate_to(router);
+
+
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
     GList *icons = new_pix_buf_list_from_resource(

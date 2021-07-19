@@ -340,26 +340,64 @@ static void dispose(){
     list = NULL;
 }
 
-extern int show_note_dialog() {
-    show_kw = FALSE;
-    box = note_widget();
-    dialog = gtk_dialog_new();
-    GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    gtk_container_add(GTK_CONTAINER(content_area), box);
-
+static GtkWidget *main_header_bar(){
     GtkWidget *header_bar = gtk_header_bar_new();
     GtkWidget *setting = gtk_button_new_with_label("设置");
+
     gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
     gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header_bar), controller);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), setting);
     g_signal_connect(setting,"clicked",G_CALLBACK(open_setting),NULL);
 
-    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
-    gtk_window_set_titlebar(GTK_WINDOW(dialog), header_bar);
-    gtk_window_set_default_size(GTK_WINDOW(dialog), DEFAULT_WINDOW_WIDTH, DEFAULT_WIDOW_HEIGHT);
-    gtk_widget_show_all(dialog);
-    int result = gtk_dialog_run(GTK_DIALOG(dialog));
-    dispose();
-    gtk_widget_destroy(dialog);
-    return result;
+    return header_bar;
+}
+
+static GtkWidget *main_pane(){
+    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
+    stack = gtk_stack_new();
+    inner_box = get_inner_box();
+    widget = gtk_flow_box_new();
+    widget1 = gtk_flow_box_new();
+    controller = gtk_stack_switcher_new();
+    scroll = gtk_scrolled_window_new(NULL, NULL);
+    scroll1 = gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_widget_set_valign(widget, GTK_ALIGN_START);
+    gtk_widget_set_halign(widget, GTK_ALIGN_FILL);
+    gtk_widget_set_valign(widget1, GTK_ALIGN_START);
+    gtk_widget_set_halign(widget1, GTK_ALIGN_FILL);
+
+    gtk_container_add(GTK_CONTAINER(scroll), widget);
+    gtk_container_add(GTK_CONTAINER(scroll1), widget1);
+
+    gtk_stack_add_titled(GTK_STACK(stack), scroll, "收入", "支出");
+    gtk_stack_add_titled(GTK_STACK(stack), scroll1, "支出", "收入");
+
+
+    gtk_stack_switcher_set_stack(GTK_STACK_SWITCHER(controller), GTK_STACK(stack));
+    g_signal_connect(stack, "notify::visible-child", G_CALLBACK(switcher_changed), NULL);
+
+
+    gtk_container_add(GTK_CONTAINER(box), stack);
+    gtk_widget_set_vexpand(GTK_WIDGET(stack), TRUE);
+
+    gtk_widget_set_halign(controller, GTK_ALIGN_CENTER);
+
+
+    list = ex_cate();
+    g_list_foreach(list, (GFunc) update_item, NULL);
+
+    return box;
+}
+
+extern void navigate_to_note(){
+
+    Router *router;
+    new_navigate_router(router,0);
+    router->title = "";
+    router->widget = main_pane;
+    router->headerBar = main_header_bar;
+
+    navigate_to(router);
 }
