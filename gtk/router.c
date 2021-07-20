@@ -4,6 +4,7 @@
 
 #include "include/router.h"
 #include "include/assets.h"
+#include "include/ui_util.h"
 
 /**
  * 可Popup和Pop路由
@@ -36,6 +37,23 @@ static GtkWidget *navigate_bar = NULL;
  */
 static RouterStackFrame *top_stack = NULL;
 
+static void free_router_stack_frame(RouterStackFrame *frame) {
+    PopupAndPopRouter *_router = frame->router;
+    gtk_widget_destroy(_router->widget);
+    gtk_widget_destroy(_router->headerBar);
+    X_FREE(_router->router);
+    frame = frame->pre;
+}
+
+static void update_window_page(PopupAndPopRouter *router) {
+    //如果存在自定义title_bar则使用自定义title_bar
+    if (router->headerBar != NULL) {
+        gtk_window_set_titlebar(window, router->headerBar);
+    }
+    gtk_container_add(GTK_CONTAINER(box), router->widget);
+    gtk_widget_show_all(GTK_WIDGET(window));
+}
+
 extern void navigate_to(Router *router) {
     RouterStackFrame *frame = x_malloc(sizeof(RouterStackFrame));
     PopupAndPopRouter *pp_router = x_malloc(sizeof(PopupAndPopRouter));
@@ -54,17 +72,15 @@ extern void navigate_to(Router *router) {
         top_stack->next = frame;
         //引用+1
         g_object_ref(top_stack->router->widget);
+        if (top_stack->router->headerBar != NULL) {
+            g_object_ref(top_stack->router->headerBar);
+        }
         gtk_container_remove(GTK_CONTAINER(box), top_stack->router->widget);
     }
 
     top_stack = frame;
 
-    //如果存在自定义title_bar则使用自定义title_bar
-    if (pp_router->headerBar != NULL) {
-        gtk_window_set_titlebar(window, pp_router->headerBar);
-    }
-    gtk_container_add(GTK_CONTAINER(box), frame->router->widget);
-    gtk_widget_show_all(GTK_WIDGET(window));
+    update_window_page(pp_router);
 
 }
 
@@ -83,7 +99,33 @@ extern void redirect_to(Router *router) {
 }
 
 extern void navigate_back(int delta) {
+    int index = 0;
+    RouterStackFrame *frame = top_stack;
+    while (index < delta && frame->pre != NULL) {
+        ++index;
+        RouterStackFrame *temp = frame;
+        frame = frame->pre;
+        frame->next = NULL;
+        free_router_stack_frame(temp);
+    }
+    top_stack = frame;
+    update_window_page(frame->router);
+}
 
+/**
+ * 返回上一个路由,如果上一个路由为空,则弹出对话框询问用户是否退出当前程序
+ */
+static void left_action(GtkWidget *widget, gpointer user_data) {
+    if (top_stack->pre == NULL) {
+        //显示确定退出程序对话框
+        GtkWidget *dialog = new_confirm_dialog("确定要退出当前程序?");
+
+        gint rs = gtk_dialog_run(GTK_DIALOG(dialog));
+
+        printf("响应结果:%d\n",rs);
+        return;
+    }
+    navigate_back(1);
 }
 
 static GtkWidget *b_navigate_bar() {
@@ -113,7 +155,9 @@ static GtkWidget *b_navigate_bar() {
             gtk_image_new_from_resource("/nav_func.png")
     );
 
-    register_css_context(_box,"nav_style.css",1);
+    g_signal_connect(left, "clicked", G_CALLBACK(left_action), NULL);
+
+    register_css_context(_box, "nav_style.css", 1);
 
     gtk_container_add(GTK_CONTAINER(_box), left);
     gtk_container_add(GTK_CONTAINER(_box), center);

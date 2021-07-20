@@ -17,5 +17,7 @@
         <file alias="nav_back.png">assets/img/nav/back.png</file>
         <file alias="nav_home.png">assets/img/nav/home.png</file>
         <file alias="nav_func.png">assets/img/nav/func.png</file>
+        <file alias="dg_confirm.png">assets/img/dialog/confirm.png</file>
+
     </gresource>
 </gresources>
