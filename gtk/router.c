@@ -118,11 +118,16 @@ extern void navigate_back(int delta) {
 static void left_action(GtkWidget *widget, gpointer user_data) {
     if (top_stack->pre == NULL) {
         //显示确定退出程序对话框
-        GtkWidget *dialog = new_confirm_dialog("确定要退出当前程序?");
+        GtkWidget *dialog = new_confirm_dialog(window,"确定要退出当前程序?");
 
         gint rs = gtk_dialog_run(GTK_DIALOG(dialog));
 
-        printf("响应结果:%d\n",rs);
+        gtk_widget_destroy(dialog);
+
+        if (rs == GTK_RESPONSE_OK){
+            gtk_widget_destroy(GTK_WIDGET(window));
+        }
+
         return;
     }
     navigate_back(1);

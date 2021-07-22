@@ -8,6 +8,6 @@
 #include "common.h"
 
 
-extern GtkWidget *new_confirm_dialog(const char *message);
+extern GtkWidget *new_confirm_dialog(const GtkWindow *window,const char *message);
 
 #endif //X_LITE_UI_UTIL_H

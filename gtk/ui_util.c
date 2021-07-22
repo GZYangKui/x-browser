@@ -4,15 +4,20 @@
 
 #include "include/ui_util.h"
 
-static void trigger_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-}
-
-extern GtkWidget *new_confirm_dialog(const char *message) {
-    GtkWidget *dialog = gtk_dialog_new();
+extern GtkWidget *new_confirm_dialog(const GtkWindow *window, const char *message) {
+    GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(
+            "确认对话框",
+            GTK_WINDOW(window),
+            flags,
+            "确定",
+            GTK_RESPONSE_OK,
+            "取消",
+            GTK_RESPONSE_CANCEL,
+            NULL
+    );
     GtkWidget *area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
-    gtk_window_set_title(GTK_WINDOW(dialog), "确认对话框");
 
     GtkWidget *label = gtk_label_new(message);
     GtkWidget *icon = gtk_image_new_from_resource("/dg_confirm.png");
@@ -26,19 +31,7 @@ extern GtkWidget *new_confirm_dialog(const char *message) {
     gtk_container_add(GTK_CONTAINER(area), box);
 
     gtk_widget_show_all(dialog);
-    gint resp_id = TRUE;
-    gint resp_id1 = FALSE;
 
-    gtk_dialog_add_button(GTK_DIALOG(dialog), "确定", GTK_RESPONSE_OK);
-    gtk_dialog_add_button(GTK_DIALOG(dialog), "取消", GTK_RESPONSE_CANCEL);
-
-
-    g_signal_connect (
-            GTK_DIALOG(dialog),
-            "response",
-            G_CALLBACK(trigger_response),
-            NULL
-    );
     return dialog;
 }
 
