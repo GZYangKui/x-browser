@@ -38,11 +38,11 @@ static GtkWidget *navigate_bar = NULL;
 static RouterStackFrame *top_stack = NULL;
 
 static void free_router_stack_frame(RouterStackFrame *frame) {
+    printf("开始释放:%s\n",frame->router->router->title);
     PopupAndPopRouter *_router = frame->router;
     gtk_widget_destroy(_router->widget);
     gtk_widget_destroy(_router->headerBar);
     X_FREE(_router->router);
-    frame = frame->pre;
 }
 
 static void update_window_page(PopupAndPopRouter *router) {
@@ -180,6 +180,7 @@ extern void navigate_window(GtkWindow *target, gboolean show_nav_bar) {
     navigate_bar = b_navigate_bar();
     box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     GtkWidget *_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_vexpand(box,TRUE);
     gtk_container_add(GTK_CONTAINER(_box), box);
     if (show_nav_bar) {
         gtk_container_add(GTK_CONTAINER(_box), navigate_bar);

@@ -2,11 +2,10 @@
 // Created by yangkui on 2021/7/9.
 //
 #include "include/note.h"
-#include "include/json_util.h"
 #include "include/assets.h"
 #include "include/sqlite3.h"
-#include "include/string_util.h"
 #include "include/xd_operate.h"
+#include "include/note_setting.h"
 
 #define ZERO "0.00"
 
@@ -239,7 +238,6 @@ static GtkWidget *get_inner_box() {
 }
 
 static void item_select(GtkWidget *btn, FeeCategory *item) {
-    printf("name:%s\n", item->name);
     if (show_kw == TRUE) {
         return;
     }
@@ -316,17 +314,6 @@ extern GtkWidget *note_widget() {
 }
 
 
-static void open_setting(GtkWidget *setting,gpointer *user_data){
-//    GtkWidget *window = gtk_dialog_new();
-
-   // gtk_widget_set_visible(dialog,FALSE);
-
-//    gtk_widget_show_all(window);
-//    gtk_dialog_run(GTK_DIALOG(window));
-//
-//    gtk_widget_set_visible(dialog,TRUE);
-}
-
 static void dispose(){
     if (list==NULL){
         return;
@@ -347,7 +334,7 @@ static GtkWidget *main_header_bar(){
     gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
     gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header_bar), controller);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), setting);
-    g_signal_connect(setting,"clicked",G_CALLBACK(open_setting),NULL);
+    g_signal_connect(setting,"clicked",G_CALLBACK(nav_note_setting),NULL);
 
     return header_bar;
 }
@@ -395,7 +382,7 @@ extern void navigate_to_note(){
 
     Router *router;
     new_navigate_router(router,0);
-    router->title = "";
+    router->title = "记账";
     router->widget = main_pane;
     router->headerBar = main_header_bar;
 
