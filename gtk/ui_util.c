@@ -5,7 +5,7 @@
 #include "include/ui_util.h"
 
 static void trigger_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
-    gtk_dialog_response(dialog, response_id);
+    gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 extern GtkWidget *new_confirm_dialog(const char *message) {
